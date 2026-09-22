@@ -132,7 +132,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
   return (
     <section
       id="products"
-      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#F7FBF8] border-t border-[#E8F5EF] scroll-mt-20 sm:scroll-mt-24"
+      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#F9FAFB] border-t border-[#E5E7EB] scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Subtle organic green background blur accents */}
       <div
@@ -154,29 +154,29 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
           className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
         >
           {/* Section Label */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/15 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
             <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
             PRODUCT INFORMATION
           </div>
 
-          {/* Main Heading */}
+          {/* Main Heading - Charcoal */}
           <h2
             id="products-section-heading"
-            className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#07563F] tracking-tight leading-[1.18] mb-5 text-balance"
+            className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#111111] tracking-tight leading-[1.18] mb-5 text-balance"
           >
             EXPLORE THE NUTRITION & WELLNESS RANGE
           </h2>
 
-          {/* Supporting Text */}
+          {/* Supporting Text - Neutral Gray */}
           <p
             id="products-section-subheading"
-            className="text-base sm:text-lg text-[#07563F]/80 leading-relaxed font-normal mb-4"
+            className="text-base sm:text-lg text-[#5F6368] leading-relaxed font-normal mb-4"
           >
             Learn about the different product categories and how they fit into the broader wellness and nutrition journey.
           </p>
 
           {/* Informational Guidance Badge */}
-          <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#087A5A] bg-[#FFFFFF] border border-[#E8F5EF] px-3.5 py-1.5 rounded-full shadow-xs">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#5F6368] bg-[#FFFFFF] border border-[#E5E7EB] px-3.5 py-1.5 rounded-full shadow-2xs">
             <Info className="w-3.5 h-3.5 text-[#087A5A]" />
             <span>Informational Guide Only • Consult an Independent Associate for Personal Guidance</span>
           </div>
@@ -187,7 +187,6 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16 sm:mb-20">
           {categories.map((category, index) => {
             const isExpanded = expandedCategory === category.id;
-            // On desktop, make first two cards span evenly if desired or keep clean grid
             const isWide = index < 2;
 
             return (
@@ -198,7 +197,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.45, delay: index * 0.08 }}
-                className={`rounded-[24px] bg-[#FFFFFF] border border-[#E8F5EF] hover:border-[#087A5A]/35 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between ${
+                className={`rounded-[24px] bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#087A5A]/50 shadow-xs hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col justify-between ${
                   isWide ? 'lg:col-span-1' : ''
                 }`}
               >
@@ -231,11 +230,11 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
 
                   {/* Card Body */}
                   <div className="p-6">
-                    <p className="text-sm text-[#07563F]/80 leading-relaxed font-normal mb-5">
+                    <p className="text-sm text-[#5F6368] leading-relaxed font-normal mb-5">
                       {category.shortDescription}
                     </p>
 
-                    {/* Interactive "LEARN MORE →" Button (Does NOT open e-commerce) */}
+                    {/* Interactive "LEARN MORE →" Button */}
                     <button
                       type="button"
                       id={`learn-more-btn-${category.id}`}
@@ -254,7 +253,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                   </div>
                 </div>
 
-                {/* ACCORDION EXPANSION AREA: Smoothly revealed when user clicks LEARN MORE */}
+                {/* ACCORDION EXPANSION AREA */}
                 <AnimatePresence>
                   {isExpanded && (
                     <motion.div
@@ -263,16 +262,16 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                      className="overflow-hidden bg-[#F7FBF8] border-t border-[#E8F5EF]"
+                      className="overflow-hidden bg-[#F9FAFB] border-t border-[#E5E7EB]"
                     >
                       <div className="p-6 space-y-4">
-                        {/* Explanation */}
+                        {/* Overview */}
                         <div>
                           <h4 className="text-xs font-bold uppercase tracking-wider text-[#087A5A] mb-1.5 flex items-center gap-1.5">
                             <Layers className="w-3.5 h-3.5" />
                             Overview
                           </h4>
-                          <p className="text-xs sm:text-sm text-[#07563F]/85 leading-relaxed font-normal">
+                          <p className="text-xs sm:text-sm text-[#5F6368] leading-relaxed font-normal">
                             {category.explanation}
                           </p>
                         </div>
@@ -287,7 +286,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                             {category.examples.map((example, i) => (
                               <li
                                 key={i}
-                                className="flex items-start gap-2 text-xs text-[#07563F]/85 leading-relaxed"
+                                className="flex items-start gap-2 text-xs text-[#5F6368] leading-relaxed"
                               >
                                 <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A] shrink-0 mt-0.5" />
                                 <span>{example}</span>
@@ -297,8 +296,8 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                         </div>
 
                         {/* Consultation Note */}
-                        <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E8F5EF]">
-                          <p className="text-[11px] text-[#07563F]/75 leading-relaxed flex items-start gap-2">
+                        <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E5E7EB]">
+                          <p className="text-[11px] text-[#5F6368] leading-relaxed flex items-start gap-2">
                             <HelpCircle className="w-3.5 h-3.5 text-[#087A5A] shrink-0 mt-0.5" />
                             <span>{category.advisory}</span>
                           </p>
@@ -312,7 +311,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => onContactClick && onContactClick(category.title)}
-                            className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-full bg-[#E8F5EF] hover:bg-[#087A5A] text-[#087A5A] hover:text-[#FFFFFF] text-xs font-bold transition-all shadow-2xs active:scale-[0.98] cursor-pointer"
+                            className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-[12px] bg-[#FFFFFF] border border-[#087A5A] text-[#087A5A] hover:bg-[#087A5A] hover:text-[#FFFFFF] text-xs font-bold transition-all shadow-2xs active:scale-[0.98] cursor-pointer"
                           >
                             <MessageCircle className="w-3.5 h-3.5" />
                             <span>Inquire About {category.title} →</span>
@@ -334,20 +333,20 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5 }}
-          className="pt-4 border-t border-[#E8F5EF]"
+          className="pt-4 border-t border-[#E5E7EB]"
         >
-          <div className="rounded-[24px] bg-[#FFFFFF] border border-[#E8F5EF] p-6 sm:p-8 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="rounded-[24px] bg-[#FFFFFF] border border-[#E5E7EB] p-6 sm:p-8 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
             <div className="text-center md:text-left">
               {/* Small Label */}
               <span className="text-xs font-bold uppercase tracking-widest text-[#087A5A] block mb-1">
                 NEED MORE INFORMATION?
               </span>
-              {/* Heading */}
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#07563F] tracking-tight">
+              {/* Heading - Charcoal */}
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#111111] tracking-tight">
                 LET'S TALK ABOUT WHAT YOU'RE LOOKING FOR
               </h3>
-              {/* Supporting Text */}
-              <p className="text-sm sm:text-base text-[#07563F]/80 mt-2 max-w-2xl leading-relaxed font-normal">
+              {/* Supporting Text - Neutral Gray */}
+              <p className="text-sm sm:text-base text-[#5F6368] mt-2 max-w-2xl leading-relaxed font-normal">
                 Have questions about the products or wellness options? Contact us directly and we'll explain the information personally.
               </p>
             </div>
@@ -359,7 +358,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => onContactClick && onContactClick('All Categories')}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
               >
                 <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
                 <span>ASK US ON WHATSAPP →</span>

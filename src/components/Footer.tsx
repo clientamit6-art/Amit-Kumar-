@@ -24,10 +24,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
   return (
     <footer
       id="main-footer"
-      className="w-full bg-[#FFFFFF] border-t border-[#E8F5EF] py-12 sm:py-16 text-[#07563F]"
+      className="w-full bg-[#FFFFFF] border-t border-[#E5E7EB] py-12 sm:py-16 text-[#111111]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 pb-10 border-b border-[#E8F5EF]">
+        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 pb-10 border-b border-[#E5E7EB]">
           {/* Left Side: Herbalife branding/logo area + description */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-sm">
             <div
@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
               </div>
 
               <div className="flex flex-col text-left">
-                <span className="font-extrabold text-xl tracking-tight text-[#07563F] leading-none">
+                <span className="font-extrabold text-xl tracking-tight text-[#111111] leading-none">
                   HERBALIFE
                 </span>
                 <span className="text-[10px] uppercase font-semibold tracking-wider text-[#087A5A] mt-0.5">
@@ -70,7 +70,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
             </div>
 
             {/* Required Short Description */}
-            <p className="text-xs sm:text-sm text-[#07563F]/75 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-[#5F6368] leading-relaxed font-normal">
               Wellness information, product information and business opportunity guidance.
             </p>
           </div>
@@ -88,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
                   id={`footer-link-${item.label.toLowerCase()}`}
                   href={item.href}
                   onClick={(e) => handleLinkClick(e, item.label)}
-                  className="text-[#07563F] hover:text-[#087A5A] transition-colors py-1"
+                  className="text-[#5F6368] hover:text-[#087A5A] transition-colors py-1"
                 >
                   {item.label}
                 </a>
@@ -100,7 +100,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
               <a
                 id="footer-phone-call-link"
                 href="tel:+916398331007"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] text-[#087A5A] font-bold hover:bg-[#087A5A] hover:text-[#FFFFFF] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[12px] bg-[#E8F5EF] text-[#087A5A] font-bold hover:bg-[#087A5A] hover:text-[#FFFFFF] transition-colors"
                 title="Call Directly"
               >
                 <Phone className="w-3.5 h-3.5" />
@@ -111,7 +111,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
                 href="https://wa.me/916398331007?text=Hello%2C%20I%20visited%20your%20website%20and%20would%20like%20to%20know%20more."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#087A5A] text-[#FFFFFF] font-bold hover:bg-[#07563F] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[12px] bg-[#087A5A] text-[#FFFFFF] font-bold hover:bg-[#07563F] transition-colors shadow-xs"
                 title="Chat on WhatsApp"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
@@ -122,7 +122,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
         </div>
 
         {/* Bottom Copyright Area */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#07563F]/60">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#5F6368]">
           <p id="footer-copyright">
             © 2026 All rights reserved.
           </p>

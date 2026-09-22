@@ -56,7 +56,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
   return (
     <section
       id="health-section"
-      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#FFFFFF] border-t border-b border-[#E8F5EF] scroll-mt-20 sm:scroll-mt-24"
+      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#FFFFFF] border-t border-b border-[#E5E7EB] scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Background architectural accents strictly in green and white */}
       <div
@@ -78,23 +78,23 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
           className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
         >
           {/* Small Label */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/15 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
             <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
             HEALTH & WELLNESS
           </div>
 
-          {/* Main Heading */}
+          {/* Main Heading - Dark text, not green */}
           <h2
             id="health-section-heading"
-            className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#07563F] tracking-tight leading-[1.15] mb-5 text-balance"
+            className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#111111] tracking-tight leading-[1.15] mb-5 text-balance"
           >
             BUILD A HEALTHIER EVERYDAY ROUTINE
           </h2>
 
-          {/* Supporting Text */}
+          {/* Supporting Text - Neutral Gray */}
           <p
             id="health-section-subheading"
-            className="text-base sm:text-lg text-[#07563F]/80 leading-relaxed font-normal"
+            className="text-base sm:text-lg text-[#5F6368] leading-relaxed font-normal"
           >
             Explore nutrition, wellness and everyday healthy-lifestyle support through products and personalized guidance.
           </p>
@@ -111,7 +111,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-6"
           >
-            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E8F5EF] shadow-lg shadow-[#07563F]/5 p-3 sm:p-4">
+            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E5E7EB] shadow-md p-3 sm:p-4">
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#E8F5EF]">
                 <img
                   src={healthRoutineImg}
@@ -125,7 +125,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
 
                 {/* Bottom Overlay Card */}
                 <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E8F5EF] shadow-sm flex items-center justify-between gap-3">
+                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E5E7EB] shadow-sm flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-10 h-10 rounded-lg bg-[#E8F5EF] flex items-center justify-center text-[#087A5A] shrink-0">
                         <ShieldCheck className="w-5 h-5" />
@@ -134,7 +134,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
                         <p className="text-[11px] font-bold uppercase tracking-wider text-[#087A5A]">
                           Evidence-Based Care
                         </p>
-                        <p className="text-sm font-bold text-[#07563F] truncate">
+                        <p className="text-sm font-bold text-[#111111] truncate">
                           Personalized Nutrition & Hydration
                         </p>
                       </div>
@@ -147,7 +147,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
               </div>
 
               {/* Sub-image caption details */}
-              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#07563F]/75">
+              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#5F6368]">
                 <span className="flex items-center gap-1.5 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A]" />
                   Balanced macronutrients & micronutrients
@@ -171,27 +171,27 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
                 <div
                   key={card.id}
                   id={`health-card-${card.id}`}
-                  className="group relative p-6 rounded-[22px] bg-[#FFFFFF] border border-[#E8F5EF] hover:border-[#087A5A]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-md shadow-sm select-none"
+                  className="group relative p-6 rounded-[22px] bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#087A5A]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-md shadow-xs select-none"
                 >
                   {/* Card Icon */}
                   <div className="w-12 h-12 rounded-xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center mb-4 transition-all duration-300 group-hover:bg-[#087A5A] group-hover:text-[#FFFFFF] group-hover:scale-105">
                     <IconComponent className="w-6 h-6" />
                   </div>
 
-                  {/* Card Title */}
-                  <h3 className="text-base sm:text-lg font-bold text-[#07563F] group-hover:text-[#087A5A] transition-colors mb-2 tracking-tight">
+                  {/* Card Title - Charcoal */}
+                  <h3 className="text-base sm:text-lg font-bold text-[#111111] group-hover:text-[#087A5A] transition-colors mb-2 tracking-tight">
                     {card.title}
                   </h3>
 
-                  {/* Card Description */}
-                  <p className="text-sm text-[#07563F]/80 leading-relaxed font-normal">
+                  {/* Card Description - Neutral Gray */}
+                  <p className="text-sm text-[#5F6368] leading-relaxed font-normal">
                     {card.description}
                   </p>
 
                   {/* Subtle bottom indicator */}
-                  <div className="mt-4 pt-3 border-t border-[#E8F5EF] flex items-center justify-between text-xs text-[#087A5A] font-semibold">
+                  <div className="mt-4 pt-3 border-t border-[#E5E7EB] flex items-center justify-between text-xs text-[#5F6368] font-semibold">
                     <span>Category 0{idx + 1}</span>
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-[#087A5A] opacity-0 group-hover:opacity-100 transition-opacity">
                       Learn More →
                     </span>
                   </div>
@@ -209,38 +209,38 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-14 sm:mt-16 pt-10 border-t border-[#E8F5EF]"
+          className="mt-14 sm:mt-16 pt-10 border-t border-[#E5E7EB]"
         >
           {/* Section Heading & Subheading */}
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/15 text-[#087A5A] text-xs font-extrabold uppercase tracking-widest mb-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-xs font-extrabold uppercase tracking-widest mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[#087A5A]" />
               PERSONALIZED GUIDANCE
             </div>
 
             <h3
               id="guidance-main-heading"
-              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#07563F] tracking-tight mb-3"
+              className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#111111] tracking-tight mb-3"
             >
               READY TO LEARN MORE?
             </h3>
 
             <p
               id="guidance-supporting-text"
-              className="text-sm sm:text-base text-[#07563F]/80 leading-relaxed font-normal"
+              className="text-sm sm:text-base text-[#5F6368] leading-relaxed font-normal"
             >
               Explore the information, understand what may be right for your wellness or business goals, and connect with us directly for personalized guidance.
             </p>
 
             {/* Information Journey Flow Indicator */}
-            <div className="mt-4 inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#087A5A] bg-[#F7FBF8] border border-[#E8F5EF] px-3 py-1.5 rounded-full">
-              <span>LEARN</span>
-              <span className="text-[#07563F]/40">→</span>
+            <div className="mt-4 inline-flex items-center gap-2 text-[11px] sm:text-xs font-semibold text-[#5F6368] bg-[#F9FAFB] border border-[#E5E7EB] px-3.5 py-1.5 rounded-full">
+              <span className="text-[#087A5A] font-bold">LEARN</span>
+              <span className="text-[#9CA3AF]">→</span>
               <span>UNDERSTAND</span>
-              <span className="text-[#07563F]/40">→</span>
+              <span className="text-[#9CA3AF]">→</span>
               <span>CONTACT US</span>
-              <span className="text-[#07563F]/40">→</span>
-              <span>PERSONAL GUIDANCE</span>
+              <span className="text-[#9CA3AF]">→</span>
+              <span className="text-[#087A5A] font-bold">PERSONAL GUIDANCE</span>
             </div>
           </div>
 
@@ -250,7 +250,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
             {/* CARD 1 — HEALTH */}
             <div
               id="contact-card-health"
-              className="p-6 sm:p-8 rounded-[24px] bg-[#FFFFFF] border border-[#E8F5EF] hover:border-[#087A5A]/40 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between"
+              className="p-6 sm:p-8 rounded-[24px] bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#087A5A]/50 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between"
             >
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center mb-5">
@@ -262,29 +262,29 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
                   Wellness Consultation
                 </div>
 
-                <h4 className="text-xl sm:text-2xl font-extrabold text-[#07563F] mb-3 tracking-tight">
+                <h4 className="text-xl sm:text-2xl font-extrabold text-[#111111] mb-3 tracking-tight">
                   HEALTH & WELLNESS
                 </h4>
 
-                <p className="text-sm sm:text-[15px] text-[#07563F]/80 leading-relaxed mb-6 font-normal">
+                <p className="text-sm sm:text-[15px] text-[#5F6368] leading-relaxed mb-6 font-normal">
                   Want to learn more about nutrition, wellness and available products? Connect with us and we'll explain everything personally.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#E8F5EF] space-y-3">
+              <div className="pt-4 border-t border-[#E5E7EB] space-y-3">
                 <a
                   id="whatsapp-ask-health-btn"
                   href={HEALTH_WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => onContactClick && onContactClick('health')}
-                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-[15px] font-bold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-[15px] font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
                 >
                   <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
                   <span>ASK ABOUT HEALTH →</span>
                 </a>
 
-                <p className="text-center text-xs text-[#07563F]/60 flex items-center justify-center gap-1.5">
+                <p className="text-center text-xs text-[#5F6368] flex items-center justify-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A]" />
                   Direct WhatsApp: +91 63983 31007
                 </p>
@@ -294,7 +294,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
             {/* CARD 2 — WEALTH */}
             <div
               id="contact-card-wealth"
-              className="p-6 sm:p-8 rounded-[24px] bg-[#FFFFFF] border border-[#E8F5EF] hover:border-[#087A5A]/40 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between"
+              className="p-6 sm:p-8 rounded-[24px] bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#087A5A]/50 transition-all duration-300 shadow-xs hover:shadow-md flex flex-col justify-between"
             >
               <div>
                 <div className="w-12 h-12 rounded-2xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center mb-5">
@@ -306,29 +306,29 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
                   Independent Opportunity
                 </div>
 
-                <h4 className="text-xl sm:text-2xl font-extrabold text-[#07563F] mb-3 tracking-tight">
+                <h4 className="text-xl sm:text-2xl font-extrabold text-[#111111] mb-3 tracking-tight">
                   BUSINESS OPPORTUNITY
                 </h4>
 
-                <p className="text-sm sm:text-[15px] text-[#07563F]/80 leading-relaxed mb-6 font-normal">
+                <p className="text-sm sm:text-[15px] text-[#5F6368] leading-relaxed mb-6 font-normal">
                   Interested in learning how the Independent Associate business opportunity works? Connect with us for a personal explanation.
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-[#E8F5EF] space-y-3">
+              <div className="pt-4 border-t border-[#E5E7EB] space-y-3">
                 <a
                   id="whatsapp-ask-wealth-btn"
                   href={WEALTH_WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => onContactClick && onContactClick('wealth')}
-                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-[15px] font-bold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-[15px] font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
                 >
                   <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
                   <span>ASK ABOUT WEALTH →</span>
                 </a>
 
-                <p className="text-center text-xs text-[#07563F]/60 flex items-center justify-center gap-1.5">
+                <p className="text-center text-xs text-[#5F6368] flex items-center justify-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A]" />
                   Direct WhatsApp: +91 63983 31007
                 </p>

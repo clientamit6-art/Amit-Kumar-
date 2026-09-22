@@ -37,7 +37,7 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
   return (
     <section
       id="about"
-      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#FFFFFF] border-t border-[#E8F5EF] scroll-mt-20 sm:scroll-mt-24"
+      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#FFFFFF] border-t border-[#E5E7EB] scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Subtle organic light green accents */}
       <div
@@ -59,36 +59,36 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
           className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
         >
           {/* Label */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/15 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
             <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
             OUR STORY
           </div>
 
-          {/* Main Heading */}
+          {/* Main Heading - Charcoal */}
           <h2
             id="company-story-heading"
-            className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#07563F] tracking-tight leading-[1.18] mb-5 text-balance"
+            className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#111111] tracking-tight leading-[1.18] mb-5 text-balance"
           >
             FROM A WELLNESS VISION TO A GLOBAL COMMUNITY
           </h2>
 
-          {/* Introduction */}
+          {/* Introduction - Neutral Gray */}
           <p
             id="company-story-intro"
-            className="text-base sm:text-lg text-[#07563F]/85 leading-relaxed font-normal mb-6"
+            className="text-base sm:text-lg text-[#5F6368] leading-relaxed font-normal mb-6"
           >
             Herbalife was founded in 1980 and has grown into a global nutrition and wellness company. Herbalife has been present in India since 1999.
           </p>
 
           {/* Clear Distinction Pill Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-bold text-[#07563F]">
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7FBF8] border border-[#E8F5EF] text-[#087A5A]">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm font-bold text-[#111111]">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F9FAFB] border border-[#E5E7EB] text-[#087A5A]">
               <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
-              Founded globally: <strong className="text-[#07563F]">1980</strong>
+              Founded globally: <strong className="text-[#111111]">1980</strong>
             </span>
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F7FBF8] border border-[#E8F5EF] text-[#087A5A]">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F9FAFB] border border-[#E5E7EB] text-[#087A5A]">
               <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
-              Herbalife India: <strong className="text-[#07563F]">Since 1999</strong>
+              Herbalife India: <strong className="text-[#111111]">Since 1999</strong>
             </span>
           </div>
         </motion.div>
@@ -104,7 +104,7 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 order-2 lg:order-1"
           >
-            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E8F5EF] shadow-lg shadow-[#07563F]/5 p-3 sm:p-4">
+            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E5E7EB] shadow-md p-3 sm:p-4">
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#E8F5EF]">
                 <img
                   src={storyImg}
@@ -117,12 +117,12 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#07563F]/50 via-transparent to-transparent pointer-events-none" />
 
                 <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E8F5EF] shadow-sm flex items-center justify-between gap-3">
+                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E5E7EB] shadow-sm flex items-center justify-between gap-3">
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-wider text-[#087A5A]">
                         Global Presence
                       </p>
-                      <p className="text-sm font-bold text-[#07563F]">
+                      <p className="text-sm font-bold text-[#111111]">
                         Nutrition, Community & Support
                       </p>
                     </div>
@@ -134,7 +134,7 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
               </div>
 
               {/* Sub-image note */}
-              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#07563F]/75">
+              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#5F6368]">
                 <span className="flex items-center gap-1.5 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A]" />
                   Operating across diverse communities
@@ -153,11 +153,11 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
                 <h3 className="text-sm font-bold uppercase tracking-widest text-[#087A5A]">
                   CHRONOLOGICAL MILESTONES
                 </h3>
-                <span className="text-xs text-[#07563F]/60">Historical Overview</span>
+                <span className="text-xs text-[#5F6368]">Historical Overview</span>
               </div>
 
               {/* Timeline Cards Container */}
-              <div className="relative pl-6 sm:pl-0 border-l-2 sm:border-l-0 border-[#E8F5EF] sm:grid sm:grid-cols-3 gap-4">
+              <div className="relative pl-6 sm:pl-0 border-l-2 sm:border-l-0 border-[#E5E7EB] sm:grid sm:grid-cols-3 gap-4">
                 {timelinePoints.map((point, index) => {
                   const Icon = point.icon;
                   return (
@@ -173,7 +173,7 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
                       {/* Mobile timeline node dot */}
                       <span className="absolute -left-[31px] top-4 w-3.5 h-3.5 rounded-full bg-[#FFFFFF] border-2 border-[#087A5A] sm:hidden" />
 
-                      <div className="p-5 rounded-[22px] bg-[#FFFFFF] border border-[#E8F5EF] hover:border-[#087A5A]/40 transition-all duration-300 hover:-translate-y-1 shadow-sm flex flex-col justify-between h-full">
+                      <div className="p-5 rounded-[22px] bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#087A5A]/50 transition-all duration-300 hover:-translate-y-1 shadow-xs flex flex-col justify-between h-full">
                         <div>
                           {/* Year header + icon */}
                           <div className="flex items-center justify-between mb-3">
@@ -185,20 +185,20 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
                             </div>
                           </div>
 
-                          <p className="text-xs font-bold uppercase tracking-wider text-[#07563F]/70 mb-1.5">
+                          <p className="text-xs font-bold uppercase tracking-wider text-[#5F6368] mb-1.5">
                             {point.label}
                           </p>
 
                           {/* Description */}
-                          <p className="text-sm text-[#07563F]/85 leading-relaxed font-normal">
+                          <p className="text-sm text-[#5F6368] leading-relaxed font-normal">
                             {point.description}
                           </p>
                         </div>
 
                         {/* Visual progression indicator */}
-                        <div className="mt-4 pt-3 border-t border-[#E8F5EF] flex items-center justify-between text-[11px] text-[#087A5A] font-semibold">
+                        <div className="mt-4 pt-3 border-t border-[#E5E7EB] flex items-center justify-between text-[11px] text-[#087A5A] font-semibold">
                           <span>Milestone 0{index + 1}</span>
-                          <span className="text-[#07563F]/40 sm:inline hidden">→</span>
+                          <span className="text-[#9CA3AF] sm:inline hidden">→</span>
                         </div>
                       </div>
                     </motion.div>
@@ -214,16 +214,16 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45 }}
-              className="p-5 sm:p-6 rounded-[22px] bg-[#F7FBF8] border border-[#E8F5EF] shadow-sm flex items-start gap-4"
+              className="p-5 sm:p-6 rounded-[22px] bg-[#F9FAFB] border border-[#E5E7EB] shadow-xs flex items-start gap-4"
             >
               <div className="w-10 h-10 rounded-xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center shrink-0 mt-0.5">
                 <HelpCircle className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h4 className="text-sm sm:text-base font-bold text-[#07563F] mb-1.5 tracking-tight">
+                <h4 className="text-sm sm:text-base font-bold text-[#111111] mb-1.5 tracking-tight">
                   WHY THIS MATTERS
                 </h4>
-                <p className="text-sm text-[#07563F]/80 leading-relaxed font-normal">
+                <p className="text-sm text-[#5F6368] leading-relaxed font-normal">
                   Understanding the company, its products and its business model helps you make an informed decision before connecting with an Independent Associate.
                 </p>
               </div>
@@ -240,17 +240,17 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5 }}
-          className="pt-10 border-t border-[#E8F5EF]"
+          className="pt-10 border-t border-[#E5E7EB]"
         >
-          <div className="rounded-[24px] bg-[#F7FBF8] border border-[#E8F5EF] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="rounded-[24px] bg-[#F9FAFB] border border-[#E5E7EB] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
             <div className="text-center md:text-left">
               <span className="text-xs font-bold uppercase tracking-widest text-[#087A5A] block mb-1">
                 TRANSPARENT CONSULTATION
               </span>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-[#07563F]">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-[#111111]">
                 WANT TO UNDERSTAND MORE?
               </h3>
-              <p className="text-sm text-[#07563F]/75 mt-1.5 max-w-xl leading-relaxed font-normal">
+              <p className="text-sm text-[#5F6368] mt-1.5 max-w-xl leading-relaxed font-normal">
                 Connect with us directly and we'll explain the wellness and business information personally.
               </p>
             </div>
@@ -262,7 +262,7 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={onContactClick}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer"
               >
                 <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
                 <span>CHAT ON WHATSAPP →</span>

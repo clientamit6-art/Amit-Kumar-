@@ -58,7 +58,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
   return (
     <section
       id="why-connect"
-      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#F7FBF8] border-t border-[#E8F5EF] scroll-mt-20 sm:scroll-mt-24"
+      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#F9FAFB] border-t border-[#E5E7EB] scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Background ambient accents in strictly green/white */}
       <div
@@ -82,7 +82,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-5 order-2 lg:order-1"
           >
-            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E8F5EF] shadow-lg shadow-[#07563F]/5 p-3 sm:p-4">
+            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E5E7EB] shadow-md p-3 sm:p-4">
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[4/5] bg-[#E8F5EF]">
                 <img
                   src={consultImg}
@@ -96,7 +96,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
 
                 {/* Floating Information Badge */}
                 <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E8F5EF] shadow-sm">
+                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E5E7EB] shadow-sm">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-lg bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center shrink-0">
                         <ShieldCheck className="w-5 h-5" />
@@ -105,7 +105,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
                         <p className="text-[11px] font-bold uppercase tracking-wider text-[#087A5A]">
                           Personalized Consultation
                         </p>
-                        <p className="text-sm font-bold text-[#07563F] truncate">
+                        <p className="text-sm font-bold text-[#111111] truncate">
                           Clear Answers • Zero Obligation
                         </p>
                       </div>
@@ -115,7 +115,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
               </div>
 
               {/* Sub-image caption */}
-              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#07563F]/75">
+              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#5F6368]">
                 <span className="flex items-center gap-1.5 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A]" />
                   Direct 1-on-1 dialogue on WhatsApp
@@ -135,23 +135,23 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               {/* Small Label */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/15 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
                 <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
                 WHY CONNECT WITH US
               </div>
 
-              {/* Main Heading */}
+              {/* Main Heading - Charcoal */}
               <h2
                 id="why-connect-heading"
-                className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-[#07563F] tracking-tight leading-[1.18] mb-4 text-balance"
+                className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-[#111111] tracking-tight leading-[1.18] mb-4 text-balance"
               >
                 GET THE INFORMATION YOU NEED, PERSONALLY
               </h2>
 
-              {/* Supporting Text */}
+              {/* Supporting Text - Neutral Gray */}
               <p
                 id="why-connect-subheading"
-                className="text-base sm:text-lg text-[#07563F]/80 leading-relaxed font-normal"
+                className="text-base sm:text-lg text-[#5F6368] leading-relaxed font-normal"
               >
                 Online information is a starting point. If you have questions or want to understand something in more detail, connect with us directly and we'll explain it personally.
               </p>
@@ -169,7 +169,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: idx * 0.08 }}
-                    className="group p-5 sm:p-6 rounded-[22px] bg-[#FFFFFF] border border-[#E8F5EF] hover:border-[#087A5A]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-md shadow-xs flex flex-col justify-between"
+                    className="group p-5 sm:p-6 rounded-[22px] bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#087A5A]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-md shadow-xs flex flex-col justify-between"
                   >
                     <div>
                       {/* Card Icon & Tag */}
@@ -182,20 +182,20 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
                         </span>
                       </div>
 
-                      {/* Card Title */}
-                      <h3 className="text-base font-extrabold text-[#07563F] group-hover:text-[#087A5A] transition-colors mb-2 tracking-tight">
+                      {/* Card Title - Charcoal */}
+                      <h3 className="text-base font-extrabold text-[#111111] group-hover:text-[#087A5A] transition-colors mb-2 tracking-tight">
                         {card.title}
                       </h3>
 
-                      {/* Card Description */}
-                      <p className="text-xs sm:text-sm text-[#07563F]/80 leading-relaxed font-normal">
+                      {/* Card Description - Neutral Gray */}
+                      <p className="text-xs sm:text-sm text-[#5F6368] leading-relaxed font-normal">
                         {card.text}
                       </p>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-[#E8F5EF] flex items-center justify-between text-xs text-[#087A5A] font-semibold">
+                    <div className="mt-4 pt-3 border-t border-[#E5E7EB] flex items-center justify-between text-xs text-[#5F6368] font-semibold">
                       <span>Reason 0{idx + 1}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-[#087A5A]" />
                     </div>
                   </motion.div>
                 );
@@ -212,20 +212,20 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5 }}
-          className="pt-4 border-t border-[#E8F5EF]"
+          className="pt-4 border-t border-[#E5E7EB]"
         >
-          <div className="rounded-[24px] bg-[#FFFFFF] border border-[#E8F5EF] p-6 sm:p-8 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="rounded-[24px] bg-[#FFFFFF] border border-[#E5E7EB] p-6 sm:p-8 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
             <div className="text-center md:text-left">
               {/* Small Label */}
               <span className="text-xs font-bold uppercase tracking-widest text-[#087A5A] block mb-1">
                 LET'S TALK
               </span>
-              {/* Heading */}
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#07563F] tracking-tight">
+              {/* Heading - Charcoal */}
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#111111] tracking-tight">
                 HAVE QUESTIONS? WE'RE HERE TO EXPLAIN.
               </h3>
-              {/* Supporting Text */}
-              <p className="text-sm sm:text-base text-[#07563F]/80 mt-2 max-w-2xl leading-relaxed font-normal">
+              {/* Supporting Text - Neutral Gray */}
+              <p className="text-sm sm:text-base text-[#5F6368] mt-2 max-w-2xl leading-relaxed font-normal">
                 Choose Health, Products or Wealth and contact us directly. We'll understand what you're interested in and explain the relevant information personally.
               </p>
             </div>
@@ -238,7 +238,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={onContactClick}
-                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-base font-bold tracking-wide shadow-xs hover:shadow-md transition-all duration-200 active:scale-[0.98] cursor-pointer group"
               >
                 <MessageCircle className="w-5 h-5 text-[#FFFFFF]" />
                 <span>CHAT WITH US ON WHATSAPP →</span>

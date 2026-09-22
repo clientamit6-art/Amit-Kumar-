@@ -96,7 +96,7 @@ export default function App() {
   const activeNavLabel = selectedJourney === 'health' ? 'Health' : selectedJourney === 'wealth' ? 'Wealth' : undefined;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7FBF8] text-[#07563F] selection:bg-[#E8F5EF] selection:text-[#07563F]">
+    <div className="min-h-screen flex flex-col bg-[#FFFFFF] text-[#111111] selection:bg-[#E8F5EF] selection:text-[#087A5A]">
       {/* 1. Premium Sticky Header */}
       <Header
         activeItem={activeNavLabel}
@@ -186,7 +186,7 @@ export default function App() {
       {/* 9. PREMIUM MINIMAL FOOTER (Step 10) */}
       <Footer onNavClick={handleNavClick} />
 
-      {/* Subtle Toast Feedback for Interactive Controls (strictly green and white) */}
+      {/* Subtle Toast Feedback for Interactive Controls */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
@@ -194,21 +194,21 @@ export default function App() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 z-50 max-w-md bg-[#FFFFFF] border border-[#087A5A]/20 shadow-xl rounded-2xl p-4 flex items-start gap-3 text-[#07563F]"
+            className="fixed bottom-6 right-6 z-50 max-w-md bg-[#FFFFFF] border border-[#E5E7EB] shadow-xl rounded-[14px] p-4 flex items-start gap-3 text-[#111111]"
           >
             <CheckCircle2 className="w-5 h-5 text-[#087A5A] shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-xs font-bold uppercase tracking-wider text-[#087A5A] mb-0.5">
                 Interaction Notice
               </p>
-              <p className="text-sm font-medium text-[#07563F]/90 leading-snug">
+              <p className="text-sm font-medium text-[#5F6368] leading-snug">
                 {toastMessage}
               </p>
             </div>
             <button
               type="button"
               onClick={() => setToastMessage(null)}
-              className="text-[#07563F]/50 hover:text-[#07563F] p-1 rounded-lg hover:bg-[#E8F5EF] transition-colors cursor-pointer"
+              className="text-[#5F6368] hover:text-[#111111] p-1 rounded-lg hover:bg-[#F3F4F6] transition-colors cursor-pointer"
               aria-label="Close notification"
             >
               <X className="w-4 h-4" />

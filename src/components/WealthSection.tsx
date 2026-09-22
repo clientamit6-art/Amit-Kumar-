@@ -84,7 +84,7 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
   return (
     <section
       id="wealth-section"
-      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#FFFFFF] border-t border-b border-[#E8F5EF] scroll-mt-20 sm:scroll-mt-24"
+      className="relative w-full py-16 sm:py-20 lg:py-24 bg-[#FFFFFF] border-t border-b border-[#E5E7EB] scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Background architectural accents strictly in green and white */}
       <div
@@ -106,23 +106,23 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
           className="text-center max-w-3xl mx-auto mb-12 sm:mb-16"
         >
           {/* Small Label */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/15 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
             <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
             BUSINESS OPPORTUNITY
           </div>
 
-          {/* Main Heading */}
+          {/* Main Heading - Charcoal */}
           <h2
             id="wealth-section-heading"
-            className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#07563F] tracking-tight leading-[1.15] mb-5 text-balance"
+            className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#111111] tracking-tight leading-[1.15] mb-5 text-balance"
           >
             BUILD YOUR OWN BUSINESS JOURNEY
           </h2>
 
-          {/* Supporting Text */}
+          {/* Supporting Text - Neutral Gray */}
           <p
             id="wealth-section-subheading"
-            className="text-base sm:text-lg text-[#07563F]/80 leading-relaxed font-normal"
+            className="text-base sm:text-lg text-[#5F6368] leading-relaxed font-normal"
           >
             Learn how the Herbalife Independent Associate model works, what support is available, and how you can explore the opportunity for yourself.
           </p>
@@ -138,7 +138,7 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-6"
           >
-            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E8F5EF] shadow-lg shadow-[#07563F]/5 p-3 sm:p-4">
+            <div className="relative rounded-[26px] overflow-hidden bg-[#FFFFFF] border border-[#E5E7EB] shadow-md p-3 sm:p-4">
               <div className="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#E8F5EF]">
                 <img
                   src={businessImg}
@@ -152,7 +152,7 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
 
                 {/* Bottom Overlay Card */}
                 <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4">
-                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E8F5EF] shadow-sm flex items-center justify-between gap-3">
+                  <div className="bg-[#FFFFFF]/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 border border-[#E5E7EB] shadow-sm flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="w-10 h-10 rounded-lg bg-[#E8F5EF] flex items-center justify-center text-[#087A5A] shrink-0">
                         <ShieldCheck className="w-5 h-5" />
@@ -161,7 +161,7 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
                         <p className="text-[11px] font-bold uppercase tracking-wider text-[#087A5A]">
                           Independent Associate Model
                         </p>
-                        <p className="text-sm font-bold text-[#07563F] truncate">
+                        <p className="text-sm font-bold text-[#111111] truncate">
                           Gold Standard Ethical Protections
                         </p>
                       </div>
@@ -174,7 +174,7 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
               </div>
 
               {/* Sub-image caption details */}
-              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#07563F]/75">
+              <div className="mt-3 px-2 flex items-center justify-between text-xs text-[#5F6368]">
                 <span className="flex items-center gap-1.5 font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A]" />
                   Self-paced learning & direct mentorship
@@ -198,7 +198,7 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
                 <div
                   key={card.id}
                   id={`wealth-card-${card.id}`}
-                  className="group relative p-6 rounded-[22px] bg-[#FFFFFF] border border-[#E8F5EF] hover:border-[#087A5A]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-md shadow-sm select-none flex flex-col justify-between"
+                  className="group relative p-6 rounded-[22px] bg-[#FFFFFF] border border-[#E5E7EB] hover:border-[#087A5A]/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-md shadow-xs select-none flex flex-col justify-between"
                 >
                   <div>
                     {/* Card Icon */}
@@ -206,21 +206,21 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
                       <IconComponent className="w-6 h-6" />
                     </div>
 
-                    {/* Card Title */}
-                    <h3 className="text-base sm:text-lg font-bold text-[#07563F] group-hover:text-[#087A5A] transition-colors mb-2 tracking-tight">
+                    {/* Card Title - Charcoal */}
+                    <h3 className="text-base sm:text-lg font-bold text-[#111111] group-hover:text-[#087A5A] transition-colors mb-2 tracking-tight">
                       {card.title}
                     </h3>
 
-                    {/* Card Description */}
-                    <p className="text-sm text-[#07563F]/80 leading-relaxed font-normal">
+                    {/* Card Description - Neutral Gray */}
+                    <p className="text-sm text-[#5F6368] leading-relaxed font-normal">
                       {card.text}
                     </p>
                   </div>
 
                   {/* Subtle bottom indicator */}
-                  <div className="mt-4 pt-3 border-t border-[#E8F5EF] flex items-center justify-between text-xs text-[#087A5A] font-semibold">
+                  <div className="mt-4 pt-3 border-t border-[#E5E7EB] flex items-center justify-between text-xs text-[#5F6368] font-semibold">
                     <span>Pillar 0{idx + 1}</span>
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-[#087A5A] opacity-0 group-hover:opacity-100 transition-opacity">
                       Inquire on WhatsApp →
                     </span>
                   </div>
@@ -237,21 +237,21 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-14 sm:mb-16 p-6 sm:p-8 rounded-[24px] bg-[#F7FBF8] border border-[#E8F5EF] shadow-sm"
+          className="mb-14 sm:mb-16 p-6 sm:p-8 rounded-[24px] bg-[#F9FAFB] border border-[#E5E7EB] shadow-xs"
         >
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="text-xs font-bold uppercase tracking-widest text-[#087A5A] block mb-1">
               TRANSPARENT DECISION PROCESS
             </span>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-[#07563F]">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-[#111111]">
               HOW TO EXPLORE THE OPPORTUNITY
             </h3>
-            <p className="text-sm text-[#07563F]/80 mt-2 font-normal leading-relaxed">
+            <p className="text-sm text-[#5F6368] mt-2 font-normal leading-relaxed">
               Start by learning how the opportunity works. Ask questions, understand the requirements and decide whether it is right for you.
             </p>
           </div>
 
-          {/* 4 Clean Green Steps */}
+          {/* 4 Clean Steps */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {processSteps.map((step, index) => {
               const Icon = step.icon;
@@ -259,7 +259,7 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
                 <div
                   key={step.step}
                   id={`wealth-step-${step.title.toLowerCase()}`}
-                  className="relative p-5 rounded-[20px] bg-[#FFFFFF] border border-[#E8F5EF] shadow-sm flex flex-col justify-between"
+                  className="relative p-5 rounded-[20px] bg-[#FFFFFF] border border-[#E5E7EB] shadow-xs flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
@@ -271,18 +271,18 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
                       </div>
                     </div>
 
-                    <h4 className="text-base font-extrabold text-[#07563F] mb-1.5 tracking-tight">
+                    <h4 className="text-base font-extrabold text-[#111111] mb-1.5 tracking-tight">
                       {step.title}
                     </h4>
 
-                    <p className="text-xs sm:text-sm text-[#07563F]/80 leading-relaxed font-normal">
+                    <p className="text-xs sm:text-sm text-[#5F6368] leading-relaxed font-normal">
                       {step.description}
                     </p>
                   </div>
 
                   {index < processSteps.length - 1 && (
                     <div className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 z-10">
-                      <div className="w-6 h-6 rounded-full bg-[#FFFFFF] border border-[#E8F5EF] shadow-xs flex items-center justify-center text-[#087A5A]">
+                      <div className="w-6 h-6 rounded-full bg-[#FFFFFF] border border-[#E5E7EB] shadow-xs flex items-center justify-center text-[#087A5A]">
                         <ArrowRight className="w-3 h-3" />
                       </div>
                     </div>
@@ -300,29 +300,29 @@ export const WealthSection: React.FC<WealthSectionProps> = ({ onContactClick }) 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="pt-4 border-t border-[#E8F5EF]"
+          className="pt-4 border-t border-[#E5E7EB]"
         >
-          <div className="rounded-[24px] bg-[#F7FBF8] border border-[#E8F5EF] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div className="rounded-[24px] bg-[#F9FAFB] border border-[#E5E7EB] p-5 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
             <div className="text-center md:text-left">
               <span className="text-xs font-bold uppercase tracking-widest text-[#087A5A] block mb-1">
                 PERSONALIZED CLARIFICATION
               </span>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-[#07563F]">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-[#111111]">
                 CURIOUS ABOUT THE OPPORTUNITY?
               </h3>
-              <p className="text-sm text-[#07563F]/75 mt-1.5 max-w-xl leading-relaxed font-normal">
+              <p className="text-sm text-[#5F6368] mt-1.5 max-w-xl leading-relaxed font-normal">
                 Talk to us directly and we'll explain how the business opportunity works and answer your questions personally.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+            <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full sm:w-auto">
               <a
                 id="whatsapp-wealth-cta-btn"
                 href={WEALTH_WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={onContactClick}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
               >
                 <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
                 <span>CHAT ON WHATSAPP →</span>

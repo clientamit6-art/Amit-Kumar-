@@ -49,25 +49,25 @@ export const Header: React.FC<HeaderProps> = ({
       id="main-header"
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         isScrolled
-          ? 'bg-[#FFFFFF]/95 backdrop-blur-md shadow-sm shadow-[#07563F]/5 border-b border-[#E8F5EF]'
-          : 'bg-[#FFFFFF] border-b border-[#E8F5EF]/60'
+          ? 'bg-[#FFFFFF]/95 backdrop-blur-md shadow-xs border-b border-[#E5E7EB]'
+          : 'bg-[#FFFFFF] border-b border-[#E5E7EB]'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Herbalife Branding / Logo Area */}
           <div
             id="brand-logo"
-            className="flex items-center gap-3 cursor-pointer select-none group"
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none group"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             {/* Custom stylized botanical leaf triad emblem in primary green */}
-            <div className="w-10 h-10 rounded-xl bg-[#E8F5EF] flex items-center justify-center border border-[#087A5A]/15 transition-transform duration-300 group-hover:scale-105">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#E8F5EF] flex items-center justify-center border border-[#087A5A]/15 transition-transform duration-300 group-hover:scale-105 shrink-0">
               <svg
                 viewBox="0 0 32 32"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 text-[#087A5A]"
+                className="w-5 h-5 sm:w-6 sm:h-6 text-[#087A5A]"
                 aria-label="Herbalife Leaf Emblem"
               >
                 {/* Center upright leaf */}
@@ -89,10 +89,10 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             <div className="flex flex-col">
-              <span className="font-extrabold text-xl tracking-tight text-[#07563F] leading-none">
+              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-[#111111] leading-none">
                 HERBALIFE
               </span>
-              <span className="text-[10px] uppercase font-semibold tracking-wider text-[#087A5A] mt-0.5">
+              <span className="text-[9px] sm:text-[10px] uppercase font-semibold tracking-wider text-[#087A5A] mt-0.5">
                 Wellness & Opportunity
               </span>
             </div>
@@ -118,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
                   className={`px-3.5 py-2 rounded-lg text-[15px] font-medium transition-colors ${
                     isActive
                       ? 'text-[#087A5A] bg-[#E8F5EF] font-semibold'
-                      : 'text-[#07563F] hover:text-[#087A5A] hover:bg-[#E8F5EF]/60'
+                      : 'text-[#171717] hover:text-[#087A5A] hover:bg-[#F3F4F6]'
                   }`}
                 >
                   {item.label}
@@ -127,13 +127,13 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Right Action: Get Started Button */}
+          {/* Right Action: Get Started Button (Primary Button System) */}
           <div className="hidden md:flex items-center pl-2">
             <button
               id="header-get-started-btn"
               type="button"
               onClick={onGetStartedClick}
-              className="inline-flex items-center justify-center px-6 py-2.5 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-[15px] font-semibold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center justify-center px-6 py-2.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-[15px] font-semibold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer"
             >
               Get Started
             </button>
@@ -145,7 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
               id="mobile-menu-toggle-btn"
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-11 h-11 rounded-lg flex items-center justify-center text-[#07563F] hover:bg-[#E8F5EF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#087A5A]/30 cursor-pointer"
+              className="w-11 h-11 rounded-lg flex items-center justify-center text-[#171717] hover:bg-[#F3F4F6] transition-colors focus:outline-none focus:ring-2 focus:ring-[#087A5A]/30 cursor-pointer"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -164,7 +164,7 @@ export const Header: React.FC<HeaderProps> = ({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="md:hidden overflow-hidden bg-[#FFFFFF] border-b border-[#E8F5EF] shadow-lg"
+            className="md:hidden overflow-hidden bg-[#FFFFFF] border-b border-[#E5E7EB] shadow-lg"
           >
             <div className="px-5 pt-3 pb-6 space-y-2">
               {navItems.map((item) => {
@@ -181,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({
                     className={`block px-4 py-3 rounded-xl text-base font-semibold transition-colors ${
                       isActive
                         ? 'bg-[#E8F5EF] text-[#087A5A]'
-                        : 'text-[#07563F] hover:bg-[#E8F5EF] hover:text-[#087A5A]'
+                        : 'text-[#171717] hover:bg-[#F3F4F6] hover:text-[#087A5A]'
                     }`}
                   >
                     {item.label}
@@ -196,7 +196,7 @@ export const Header: React.FC<HeaderProps> = ({
                     setMobileMenuOpen(false);
                     if (onGetStartedClick) onGetStartedClick();
                   }}
-                  className="w-full py-3 px-5 rounded-xl bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-base font-semibold tracking-wide text-center shadow-sm active:scale-[0.98] transition-all cursor-pointer"
+                  className="w-full py-3 px-5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-base font-semibold tracking-wide text-center shadow-xs active:scale-[0.98] transition-all cursor-pointer"
                 >
                   Get Started
                 </button>

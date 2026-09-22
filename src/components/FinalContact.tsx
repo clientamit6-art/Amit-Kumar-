@@ -37,15 +37,15 @@ export const FinalContact: React.FC<FinalContactProps> = ({
   return (
     <section
       id="contact"
-      className="relative w-full py-20 sm:py-24 lg:py-28 bg-[#087A5A] text-[#FFFFFF] overflow-hidden scroll-mt-20 sm:scroll-mt-24"
+      className="relative w-full py-20 sm:py-24 lg:py-28 bg-[#07563F] text-[#FFFFFF] overflow-hidden scroll-mt-20 sm:scroll-mt-24"
     >
       {/* Architectural subtle ambient shapes strictly in green and white tones */}
       <div
-        className="pointer-events-none absolute top-0 right-0 w-[500px] h-[500px] bg-[#07563F]/40 rounded-full blur-3xl -z-0"
+        className="pointer-events-none absolute top-0 right-0 w-[500px] h-[500px] bg-[#087A5A]/30 rounded-full blur-3xl -z-0"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#FFFFFF]/10 rounded-full blur-3xl -z-0"
+        className="pointer-events-none absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#FFFFFF]/5 rounded-full blur-3xl -z-0"
         aria-hidden="true"
       />
 
@@ -82,7 +82,7 @@ export const FinalContact: React.FC<FinalContactProps> = ({
         </motion.div>
 
         {/* TWO LARGE CONTACT OPTIONS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-14 sm:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-8 mb-12 sm:mb-16">
           {/* OPTION 1: HEALTH & WELLNESS */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -90,23 +90,23 @@ export const FinalContact: React.FC<FinalContactProps> = ({
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.5, delay: 0.1 }}
             id="contact-option-health"
-            className="rounded-[24px] bg-[#FFFFFF] text-[#07563F] p-7 sm:p-9 shadow-lg flex flex-col justify-between border border-[#E8F5EF]"
+            className="rounded-[24px] bg-[#FFFFFF] text-[#111111] p-5 sm:p-9 shadow-md flex flex-col justify-between border border-[#E5E7EB]"
           >
             <div>
-              <div className="flex items-center justify-between mb-5">
-                <div className="w-13 h-13 rounded-2xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center">
-                  <Heart className="w-6 h-6" />
+              <div className="flex items-center justify-between mb-4 sm:mb-5">
+                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center">
+                  <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-3 py-1 rounded-full">
+                <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-2.5 sm:px-3 py-1 rounded-full">
                   Option 01
                 </span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-extrabold text-[#07563F] tracking-tight mb-2">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-[#111111] tracking-tight mb-2">
                 HEALTH & WELLNESS
               </h3>
 
-              <p className="text-sm sm:text-base text-[#07563F]/80 leading-relaxed font-normal mb-8">
+              <p className="text-sm sm:text-base text-[#5F6368] leading-relaxed font-normal mb-6 sm:mb-8">
                 Questions about nutrition, wellness or products?
               </p>
             </div>
@@ -117,7 +117,7 @@ export const FinalContact: React.FC<FinalContactProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={onHealthClick}
-              className="inline-flex items-center justify-center gap-2.5 w-full py-4 px-6 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+              className="inline-flex items-center justify-center gap-2 w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-[14px] bg-[#087A5A] hover:bg-[#066147] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
             >
               <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
               <span>ASK ABOUT HEALTH →</span>
@@ -131,23 +131,23 @@ export const FinalContact: React.FC<FinalContactProps> = ({
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.5, delay: 0.2 }}
             id="contact-option-wealth"
-            className="rounded-[24px] bg-[#FFFFFF] text-[#07563F] p-7 sm:p-9 shadow-lg flex flex-col justify-between border border-[#E8F5EF]"
+            className="rounded-[24px] bg-[#FFFFFF] text-[#111111] p-5 sm:p-9 shadow-md flex flex-col justify-between border border-[#E5E7EB]"
           >
             <div>
-              <div className="flex items-center justify-between mb-5">
-                <div className="w-13 h-13 rounded-2xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center">
-                  <Briefcase className="w-6 h-6" />
+              <div className="flex items-center justify-between mb-4 sm:mb-5">
+                <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl sm:rounded-2xl bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center">
+                  <Briefcase className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
-                <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-3 py-1 rounded-full">
+                <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-2.5 sm:px-3 py-1 rounded-full">
                   Option 02
                 </span>
               </div>
 
-              <h3 className="text-xl sm:text-2xl font-extrabold text-[#07563F] tracking-tight mb-2">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-[#111111] tracking-tight mb-2">
                 BUSINESS OPPORTUNITY
               </h3>
 
-              <p className="text-sm sm:text-base text-[#07563F]/80 leading-relaxed font-normal mb-8">
+              <p className="text-sm sm:text-base text-[#5F6368] leading-relaxed font-normal mb-6 sm:mb-8">
                 Want to understand the Independent Associate opportunity?
               </p>
             </div>
@@ -158,7 +158,7 @@ export const FinalContact: React.FC<FinalContactProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={onWealthClick}
-              className="inline-flex items-center justify-center gap-2.5 w-full py-4 px-6 rounded-full bg-[#07563F] hover:bg-[#087A5A] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+              className="inline-flex items-center justify-center gap-2 w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-[14px] bg-[#087A5A] hover:bg-[#066147] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
             >
               <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
               <span>ASK ABOUT WEALTH →</span>
@@ -172,7 +172,7 @@ export const FinalContact: React.FC<FinalContactProps> = ({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-30px' }}
           transition={{ duration: 0.5 }}
-          className="rounded-[24px] bg-[#07563F]/70 backdrop-blur-md border border-[#FFFFFF]/15 p-6 sm:p-8"
+          className="rounded-[24px] bg-[#064e39] border border-[#FFFFFF]/15 p-6 sm:p-8"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
