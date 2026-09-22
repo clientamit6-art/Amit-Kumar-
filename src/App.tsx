@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { HealthSection } from './components/HealthSection';
 import { WealthSection } from './components/WealthSection';
+import { AmbassadorsSection } from './components/AmbassadorsSection';
 import { CompanyStory } from './components/CompanyStory';
 import { ProductsSection } from './components/ProductsSection';
 import { WellnessJourney } from './components/WellnessJourney';
@@ -48,6 +49,13 @@ export default function App() {
     setSelectedJourney(null);
   };
 
+  const handleAmbassadorsScroll = () => {
+    const el = document.getElementById('ambassadors-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handleNavClick = (section: string) => {
     const secLower = section.toLowerCase();
     if (secLower === 'about') {
@@ -60,6 +68,9 @@ export default function App() {
       handleSelectPath('health');
     } else if (secLower === 'wealth') {
       handleSelectPath('wealth');
+    } else if (secLower === 'ambassadors') {
+      handleAmbassadorsScroll();
+      showNotification('Ambassadors: Meet world-class athletes and sporting partners associated with Herbalife.');
     } else if (secLower === 'contact') {
       const el = document.getElementById('contact');
       if (el) {
@@ -110,6 +121,7 @@ export default function App() {
           selectedPath={selectedJourney}
           onSelectPath={handleSelectPath}
           onClearPath={handleClearPath}
+          onAmbassadorsClick={handleAmbassadorsScroll}
         />
 
         {/* 3. HEALTH SECTION: Revealed when HEALTH journey is selected */}
@@ -143,6 +155,17 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* AMBASSADORS & ATHLETES SECTION: Positioned below main journey content */}
+        <AmbassadorsSection
+          onContactClick={(ambassadorName?: string) =>
+            showNotification(
+              ambassadorName
+                ? `Opening WhatsApp: Inquiring about nutrition inspired by ${ambassadorName} (+91 63983 31007)...`
+                : 'Opening WhatsApp: Connecting for sports nutrition consultation (+91 63983 31007)...'
+            )
+          }
+        />
 
         {/* 4. COMPANY STORY & HISTORY SECTION (Step 5) */}
         <CompanyStory

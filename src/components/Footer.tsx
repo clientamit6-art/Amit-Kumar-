@@ -10,6 +10,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
     { label: 'About', href: '#about' },
     { label: 'Health', href: '#health' },
     { label: 'Wealth', href: '#wealth' },
+    { label: 'Ambassadors', href: '#ambassadors-section' },
     { label: 'Products', href: '#products' },
     { label: 'Contact', href: '#contact' },
   ];

@@ -8,12 +8,14 @@ interface HeroProps {
   selectedPath?: 'health' | 'wealth' | null;
   onSelectPath?: (path: 'health' | 'wealth') => void;
   onClearPath?: () => void;
+  onAmbassadorsClick?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   selectedPath: controlledPath,
   onSelectPath,
   onClearPath,
+  onAmbassadorsClick,
 }) => {
   const [internalPath, setInternalPath] = useState<'health' | 'wealth' | null>(null);
 
@@ -82,11 +84,12 @@ export const Hero: React.FC<HeroProps> = ({
               Explore wellness guidance and an opportunity to build your journey.
             </p>
 
-            {/* Premium Journey Selector (HEALTH & WEALTH) - Appears immediately near top */}
+            {/* Premium Journey Selector (HEALTH, WEALTH & AMBASSADORS) - Appears immediately near top */}
             <JourneySelector
               selectedPath={selectedPath}
               onSelectPath={handlePathClick}
               onClearPath={handleClearPath}
+              onAmbassadorsClick={onAmbassadorsClick}
             />
           </motion.div>
 
