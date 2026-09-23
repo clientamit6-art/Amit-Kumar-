@@ -8,7 +8,7 @@ interface CompanyStoryProps {
 }
 
 const STORY_WHATSAPP_NUMBER = '916398331007';
-const STORY_WHATSAPP_MSG = encodeURIComponent('Hello, I would like to learn more about Herbalife.');
+const STORY_WHATSAPP_MSG = encodeURIComponent('Hello, I would like to learn more about Amit Wellness.');
 const STORY_WHATSAPP_URL = `https://wa.me/${STORY_WHATSAPP_NUMBER}?text=${STORY_WHATSAPP_MSG}`;
 
 export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) => {
@@ -61,7 +61,7 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
           {/* Label */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-xs sm:text-sm font-extrabold uppercase tracking-widest mb-4">
             <span className="w-2 h-2 rounded-full bg-[#087A5A]" />
-            OUR STORY
+            ABOUT AMIT WELLNESS
           </div>
 
           {/* Main Heading - Charcoal */}
@@ -109,6 +109,7 @@ export const CompanyStory: React.FC<CompanyStoryProps> = ({ onContactClick }) =>
                 <img
                   src={storyImg}
                   alt="Herbalife community mentorship and wellness collaboration in a bright, modern setting"
+                  loading="lazy"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-[1.02]"
                 />

@@ -215,6 +215,7 @@ export const WellnessJourney: React.FC<WellnessJourneyProps> = ({ onContactClick
               <img
                 src={journeyConsultImg}
                 alt="Personal wellness guidance session with attentive coaching in a relaxed, sunlit interior"
+                loading="lazy"
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-[1.02]"
               />

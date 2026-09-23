@@ -207,6 +207,7 @@ export const ProductsSection: React.FC<ProductsSectionProps> = ({ onContactClick
                     <img
                       src={category.image}
                       alt={category.title}
+                      loading="lazy"
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-[1.03]"
                     />

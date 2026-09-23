@@ -1,6 +1,6 @@
 {
-  "name": "Herbalife Wellness & Business Platform",
-  "description": "A premium, modern wellness and independent business opportunity information platform.",
+  "name": "Amit Wellness",
+  "description": "Amit Wellness - A premium, modern wellness and independent business opportunity information platform.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

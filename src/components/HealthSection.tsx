@@ -116,6 +116,7 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
                 <img
                   src={healthRoutineImg}
                   alt="Healthy adult engaged in a clean and active daily wellness routine"
+                  loading="lazy"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-[1.02]"
                 />

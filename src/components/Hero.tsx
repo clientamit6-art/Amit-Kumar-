@@ -64,7 +64,7 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Subtle Pill Tag */}
             <div className="inline-flex items-center gap-1.5 sm:gap-2 self-start px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-[#E8F5EF] border border-[#087A5A]/20 text-[#087A5A] text-[11px] sm:text-sm font-semibold tracking-wide mb-2 sm:mb-5">
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#087A5A]" />
-              Herbalife Wellness & Business Platform
+              Amit Wellness
             </div>
 
             {/* Main Headline - Compact on mobile, grand on desktop */}

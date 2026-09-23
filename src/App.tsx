@@ -27,7 +27,7 @@ export default function App() {
   const handleSelectPath = (path: 'health' | 'wealth') => {
     setSelectedJourney(path);
     if (path === 'health') {
-      showNotification('Health: Health & Wellness section activated.');
+      showNotification('Health: Health & Nutrition guidance activated.');
       setTimeout(() => {
         const el = document.getElementById('health-section');
         if (el) {
@@ -99,7 +99,7 @@ export default function App() {
   const handleContactNotice = (type: 'health' | 'wealth') => {
     showNotification(
       type === 'health'
-        ? 'Opening WhatsApp: Inquiring about Health & Wellness personal consultation.'
+        ? 'Opening WhatsApp: Inquiring about Health & Nutrition personal consultation.'
         : 'Opening WhatsApp: Inquiring about the Business Opportunity personal explanation.'
     );
   };

@@ -87,6 +87,7 @@ export const WhyConnect: React.FC<WhyConnectProps> = ({ onContactClick }) => {
                 <img
                   src={consultImg}
                   alt="Friendly, approachable professional consultation discussing wellness options with genuine attention"
+                  loading="lazy"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center transform transition-transform duration-700 hover:scale-[1.02]"
                 />

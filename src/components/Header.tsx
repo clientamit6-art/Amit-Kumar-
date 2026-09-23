@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import amitWellnessLogo from '../assets/images/amit_wellness_logo_1790160852879.jpg';
 
 interface HeaderProps {
   activeItem?: string;
@@ -56,42 +57,25 @@ export const Header: React.FC<HeaderProps> = ({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Herbalife Branding / Logo Area */}
+          {/* Amit Wellness Branding / Logo Area */}
           <div
             id="brand-logo"
             className="flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none group"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
-            {/* Custom stylized botanical leaf triad emblem in primary green */}
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-[#E8F5EF] flex items-center justify-center border border-[#087A5A]/15 transition-transform duration-300 group-hover:scale-105 shrink-0">
-              <svg
-                viewBox="0 0 32 32"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-5 h-5 sm:w-6 sm:h-6 text-[#087A5A]"
-                aria-label="Herbalife Leaf Emblem"
-              >
-                {/* Center upright leaf */}
-                <path
-                  d="M16 4C16 4 19.5 9 19.5 14.5C19.5 17.5 17.5 19.5 16 20C14.5 19.5 12.5 17.5 12.5 14.5C12.5 9 16 4 16 4Z"
-                  fill="#087A5A"
-                />
-                {/* Left angled leaf */}
-                <path
-                  d="M14.5 17C14.5 17 9.5 14.5 6.5 18C4 20.8 5.2 24.2 7 25C8.8 25.5 12.5 24 14.5 20.5L14.5 17Z"
-                  fill="#07563F"
-                />
-                {/* Right angled leaf */}
-                <path
-                  d="M17.5 17C17.5 17 22.5 14.5 25.5 18C28 20.8 26.8 24.2 25 25C23.2 25.5 19.5 24 17.5 20.5L17.5 17Z"
-                  fill="#087A5A"
-                />
-              </svg>
+            {/* Official Amit Wellness Circular Logo Emblem */}
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-[#087A5A]/30 shadow-xs transition-transform duration-300 group-hover:scale-105 shrink-0 bg-[#020B1E]">
+              <img
+                src={amitWellnessLogo}
+                alt="Amit Wellness Official Logo"
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
             </div>
 
             <div className="flex flex-col">
               <span className="font-extrabold text-lg sm:text-xl tracking-tight text-[#111111] leading-none">
-                HERBALIFE
+                Amit Wellness
               </span>
               <span className="text-[9px] sm:text-[10px] uppercase font-semibold tracking-wider text-[#087A5A] mt-0.5">
                 Wellness & Opportunity
