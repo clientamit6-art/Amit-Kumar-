@@ -10,18 +10,37 @@ import { WellnessJourney } from './components/WellnessJourney';
 import { WhyConnect } from './components/WhyConnect';
 import { FinalContact } from './components/FinalContact';
 import { Footer } from './components/Footer';
-import { CheckCircle2, X, TrendingUp, ArrowRight } from 'lucide-react';
+import { AppointmentModal } from './components/AppointmentModal';
+import { AppointmentsListModal } from './components/AppointmentsListModal';
+import { Appointment } from './types/appointment';
+import { CheckCircle2, X, TrendingUp, ArrowRight, MapPin, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
   const [selectedJourney, setSelectedJourney] = useState<'health' | 'wealth' | null>('health');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
+  const [isAppointmentsListOpen, setIsAppointmentsListOpen] = useState(false);
+  const [selectedServiceForAppointment, setSelectedServiceForAppointment] = useState<string | undefined>(undefined);
 
   const showNotification = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage((current) => (current === msg ? null : current));
     }, 4000);
+  };
+
+  const handleOpenAppointment = (service?: string) => {
+    setSelectedServiceForAppointment(service);
+    setIsAppointmentModalOpen(true);
+  };
+
+  const handleAppointmentBooked = (appointment: Appointment) => {
+    if (appointment.bookingStatus === 'CONFIRMED') {
+      showNotification(`Appointment #${appointment.id} confirmed with verified location!`);
+    } else {
+      showNotification(`Appointment #${appointment.id} received. Location verification pending.`);
+    }
   };
 
   const handleSelectPath = (path: 'health' | 'wealth') => {
@@ -113,6 +132,8 @@ export default function App() {
         activeItem={activeNavLabel}
         onNavClick={handleNavClick}
         onGetStartedClick={handleGetStartedClick}
+        onBookAppointmentClick={() => handleOpenAppointment()}
+        onViewAppointmentsClick={() => setIsAppointmentsListOpen(true)}
       />
 
       {/* 2. Main Hero Section */}
@@ -122,6 +143,7 @@ export default function App() {
           onSelectPath={handleSelectPath}
           onClearPath={handleClearPath}
           onAmbassadorsClick={handleAmbassadorsScroll}
+          onBookAppointmentClick={() => handleOpenAppointment()}
         />
 
         {/* 3. HEALTH SECTION: Revealed when HEALTH journey is selected */}
@@ -134,7 +156,10 @@ export default function App() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             >
-              <HealthSection onContactClick={handleContactNotice} />
+              <HealthSection
+                onContactClick={handleContactNotice}
+                onBookAppointmentClick={(svc) => handleOpenAppointment(svc)}
+              />
             </motion.div>
           )}
 
@@ -203,11 +228,53 @@ export default function App() {
           onWealthClick={() =>
             showNotification('Opening WhatsApp: Connecting for Business Opportunity guidance (+91 63983 31007)...')
           }
+          onBookAppointmentClick={() => handleOpenAppointment()}
         />
       </main>
 
       {/* 9. PREMIUM MINIMAL FOOTER (Step 10) */}
       <Footer onNavClick={handleNavClick} />
+
+      {/* Floating Quick Action Button for Appointment Booking */}
+      <div className="fixed bottom-6 left-6 z-40 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => handleOpenAppointment()}
+          className="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-[#087A5A] hover:bg-[#07563F] text-white shadow-lg hover:shadow-xl text-xs sm:text-sm font-bold tracking-wide transition-all active:scale-95 cursor-pointer border border-white/20 group"
+        >
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+          </span>
+          <MapPin className="w-4 h-4 text-white" />
+          <span>Book Appointment</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsAppointmentsListOpen(true)}
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-3 rounded-full bg-white hover:bg-[#F3F4F6] text-[#087A5A] shadow-md border border-[#E5E7EB] text-xs font-bold transition-all cursor-pointer"
+          title="View Scheduled Appointments"
+        >
+          <Calendar className="w-4 h-4 text-[#087A5A]" />
+          <span>Bookings</span>
+        </button>
+      </div>
+
+      {/* Appointment Booking & Location Verification Modal */}
+      <AppointmentModal
+        isOpen={isAppointmentModalOpen}
+        onClose={() => setIsAppointmentModalOpen(false)}
+        preselectedService={selectedServiceForAppointment}
+        onAppointmentBooked={handleAppointmentBooked}
+      />
+
+      {/* Scheduled Appointments Records Modal */}
+      <AppointmentsListModal
+        isOpen={isAppointmentsListOpen}
+        onClose={() => setIsAppointmentsListOpen(false)}
+        onBookNewClick={() => handleOpenAppointment()}
+      />
 
       {/* Subtle Toast Feedback for Interactive Controls */}
       <AnimatePresence>

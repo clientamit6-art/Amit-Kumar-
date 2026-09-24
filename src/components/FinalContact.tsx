@@ -7,12 +7,15 @@ import {
   Info,
   ArrowRight,
   ShieldCheck,
+  MapPin,
+  Calendar,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface FinalContactProps {
   onHealthClick?: () => void;
   onWealthClick?: () => void;
+  onBookAppointmentClick?: () => void;
 }
 
 const WHATSAPP_NUMBER = '916398331007';
@@ -33,6 +36,7 @@ const DIRECT_WHATSAPP_CALL_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${GENERA
 export const FinalContact: React.FC<FinalContactProps> = ({
   onHealthClick,
   onWealthClick,
+  onBookAppointmentClick,
 }) => {
   return (
     <section
@@ -111,18 +115,31 @@ export const FinalContact: React.FC<FinalContactProps> = ({
               </p>
             </div>
 
-            <a
-              id="whatsapp-health-option-btn"
-              href={HEALTH_WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={onHealthClick}
-              className="inline-flex items-center justify-center gap-2 w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-[14px] bg-[#087A5A] hover:bg-[#066147] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
-            >
-              <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
-              <span>ASK ABOUT HEALTH →</span>
-            </a>
-          </motion.div>
+              <div className="space-y-3">
+                <a
+                  id="whatsapp-health-option-btn"
+                  href={HEALTH_WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={onHealthClick}
+                  className="inline-flex items-center justify-center gap-2 w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-[14px] bg-[#087A5A] hover:bg-[#066147] text-[#FFFFFF] text-sm sm:text-base font-bold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer group"
+                >
+                  <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
+                  <span>ASK ABOUT HEALTH →</span>
+                </a>
+
+                {onBookAppointmentClick && (
+                  <button
+                    type="button"
+                    onClick={onBookAppointmentClick}
+                    className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-[14px] bg-[#E8F5EF] hover:bg-[#d5ece0] text-[#087A5A] border border-[#087A5A]/30 text-xs sm:text-sm font-extrabold tracking-wide transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    <MapPin className="w-4 h-4 text-[#087A5A]" />
+                    <span>BOOK APPOINTMENT (LOCATION VERIFIED)</span>
+                  </button>
+                )}
+              </div>
+            </motion.div>
 
           {/* OPTION 2: BUSINESS OPPORTUNITY */}
           <motion.div

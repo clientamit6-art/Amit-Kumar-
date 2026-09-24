@@ -10,12 +10,14 @@ import {
   MessageCircle,
   HeartPulse,
   Briefcase,
+  MapPin,
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import healthRoutineImg from '../assets/images/health_wellness_routine_1789990762826.jpg';
 
 interface HealthSectionProps {
   onContactClick?: (type: 'health' | 'wealth') => void;
+  onBookAppointmentClick?: (service?: string) => void;
 }
 
 const WHATSAPP_NUMBER = '916398331007';
@@ -25,7 +27,10 @@ const WEALTH_WHATSAPP_MSG = encodeURIComponent('Hello, I would like to learn mor
 const HEALTH_WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${HEALTH_WHATSAPP_MSG}`;
 const WEALTH_WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${WEALTH_WHATSAPP_MSG}`;
 
-export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) => {
+export const HealthSection: React.FC<HealthSectionProps> = ({
+  onContactClick,
+  onBookAppointmentClick,
+}) => {
   const healthCards = [
     {
       id: 'healthy-weight',
@@ -284,6 +289,17 @@ export const HealthSection: React.FC<HealthSectionProps> = ({ onContactClick }) 
                   <MessageCircle className="w-4 h-4 text-[#FFFFFF]" />
                   <span>ASK ABOUT HEALTH →</span>
                 </a>
+
+                {onBookAppointmentClick && (
+                  <button
+                    type="button"
+                    onClick={() => onBookAppointmentClick('Personal Nutrition & Wellness Consultation')}
+                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-[14px] bg-[#E8F5EF] hover:bg-[#d5ece0] text-[#087A5A] border border-[#087A5A]/30 text-xs sm:text-sm font-extrabold tracking-wide transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    <MapPin className="w-4 h-4 text-[#087A5A]" />
+                    <span>BOOK APPOINTMENT (LOCATION VERIFIED)</span>
+                  </button>
+                )}
 
                 <p className="text-center text-xs text-[#5F6368] flex items-center justify-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#087A5A]" />

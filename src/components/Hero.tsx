@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, MapPin, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import heroLifestyleImg from '../assets/images/wellness_lifestyle_1789990124306.jpg';
 import { JourneySelector } from './JourneySelector';
@@ -9,6 +9,7 @@ interface HeroProps {
   onSelectPath?: (path: 'health' | 'wealth') => void;
   onClearPath?: () => void;
   onAmbassadorsClick?: () => void;
+  onBookAppointmentClick?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
@@ -16,6 +17,7 @@ export const Hero: React.FC<HeroProps> = ({
   onSelectPath,
   onClearPath,
   onAmbassadorsClick,
+  onBookAppointmentClick,
 }) => {
   const [internalPath, setInternalPath] = useState<'health' | 'wealth' | null>(null);
 
@@ -91,6 +93,24 @@ export const Hero: React.FC<HeroProps> = ({
               onClearPath={handleClearPath}
               onAmbassadorsClick={onAmbassadorsClick}
             />
+
+            {/* Quick Location-Verified Appointment Trigger */}
+            {onBookAppointmentClick && (
+              <div className="mt-4 sm:mt-5 pt-3 border-t border-[#E5E7EB]/80 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={onBookAppointmentClick}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#E8F5EF] hover:bg-[#d4ede0] text-[#087A5A] text-xs sm:text-sm font-bold border border-[#087A5A]/25 transition-all shadow-2xs active:scale-[0.98] cursor-pointer"
+                >
+                  <MapPin className="w-4 h-4 text-[#087A5A]" />
+                  <span>Book Appointment (Current Location Verified)</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[#087A5A]" />
+                </button>
+                <span className="text-[11px] text-[#5F6368]">
+                  • In-person & home wellness consultations
+                </span>
+              </div>
+            )}
           </motion.div>
 
           {/* RIGHT SIDE: Premium wellness/business lifestyle visual - naturally responsive */}

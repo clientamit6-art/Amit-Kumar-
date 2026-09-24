@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ArrowRight, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowRight, Sparkles, MapPin, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import amitWellnessLogo from '../assets/images/amit_wellness_logo_1790160852879.jpg';
 
@@ -7,12 +7,16 @@ interface HeaderProps {
   activeItem?: string;
   onNavClick?: (target: string) => void;
   onGetStartedClick?: () => void;
+  onBookAppointmentClick?: () => void;
+  onViewAppointmentsClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeItem,
   onNavClick,
   onGetStartedClick,
+  onBookAppointmentClick,
+  onViewAppointmentsClick,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -112,20 +116,51 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Right Action: Get Started Button (Primary Button System) */}
-          <div className="hidden md:flex items-center pl-2">
+          {/* Right Action: Book Appointment + Get Started Buttons */}
+          <div className="hidden md:flex items-center gap-2.5 pl-2">
+            {onViewAppointmentsClick && (
+              <button
+                type="button"
+                onClick={onViewAppointmentsClick}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-[#5F6368] hover:text-[#087A5A] hover:bg-[#E8F5EF] transition-colors cursor-pointer"
+                title="View Scheduled Bookings"
+              >
+                <Calendar className="w-3.5 h-3.5" />
+                <span>My Bookings</span>
+              </button>
+            )}
+
+            <button
+              id="header-book-appointment-btn"
+              type="button"
+              onClick={onBookAppointmentClick}
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-[14px] bg-[#E8F5EF] hover:bg-[#d4ede0] text-[#087A5A] border border-[#087A5A]/25 text-[14px] font-bold tracking-wide shadow-2xs transition-all duration-200 active:scale-[0.98] cursor-pointer"
+            >
+              <MapPin className="w-4 h-4 text-[#087A5A]" />
+              <span>Book Appointment</span>
+            </button>
+
             <button
               id="header-get-started-btn"
               type="button"
               onClick={onGetStartedClick}
-              className="inline-flex items-center justify-center px-6 py-2.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-[15px] font-semibold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-[14px] bg-[#087A5A] hover:bg-[#07563F] text-[#FFFFFF] text-[14px] font-semibold tracking-wide shadow-xs hover:shadow transition-all duration-200 active:scale-[0.98] cursor-pointer"
             >
               Get Started
             </button>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <div className="flex md:hidden items-center">
+          {/* Mobile Bar: Quick Book + Toggle Button */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              type="button"
+              onClick={onBookAppointmentClick}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#E8F5EF] text-[#087A5A] border border-[#087A5A]/30 text-xs font-bold"
+            >
+              <MapPin className="w-3.5 h-3.5" />
+              <span>Book</span>
+            </button>
+
             <button
               id="mobile-menu-toggle-btn"
               type="button"
@@ -173,7 +208,34 @@ export const Header: React.FC<HeaderProps> = ({
                   </a>
                 );
               })}
-              <div className="pt-2">
+              <div className="pt-2 space-y-2">
+                <button
+                  id="mobile-book-appointment-btn"
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onBookAppointmentClick) onBookAppointmentClick();
+                  }}
+                  className="w-full py-3 px-5 rounded-[14px] bg-[#E8F5EF] hover:bg-[#d4ede0] text-[#087A5A] border border-[#087A5A]/30 text-base font-bold tracking-wide text-center flex items-center justify-center gap-2 shadow-2xs active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  <MapPin className="w-5 h-5 text-[#087A5A]" />
+                  <span>Book Appointment (Verified Location)</span>
+                </button>
+
+                {onViewAppointmentsClick && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onViewAppointmentsClick();
+                    }}
+                    className="w-full py-2.5 px-4 rounded-[12px] bg-white border border-[#E5E7EB] text-[#374151] text-sm font-semibold flex items-center justify-center gap-2"
+                  >
+                    <Calendar className="w-4 h-4 text-[#087A5A]" />
+                    <span>View Scheduled Bookings</span>
+                  </button>
+                )}
+
                 <button
                   id="mobile-get-started-btn"
                   type="button"
