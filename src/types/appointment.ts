@@ -9,7 +9,9 @@ export interface LocationCoordinates {
 
 export interface GeocodedAddress {
   displayName: string;
+  houseNumber?: string;
   road?: string;
+  locality?: string;
   suburb?: string;
   city?: string;
   state?: string;
@@ -19,6 +21,16 @@ export interface GeocodedAddress {
   lng?: number;
 }
 
+export interface AddressFormFields {
+  fullName: string;
+  mobileNumber: string;
+  houseBuilding: string;
+  streetArea: string;
+  city: string;
+  state: string;
+  pinCode: string;
+}
+
 export interface Appointment {
   id: string;
   patientName: string;
@@ -26,6 +38,13 @@ export interface Appointment {
   appointmentDateTime: string;
   serviceSelected: string;
   serviceAddress: string;
+  addressDetails?: {
+    houseBuilding?: string;
+    streetArea?: string;
+    city?: string;
+    state?: string;
+    pinCode?: string;
+  };
   notes?: string;
   locationVerificationStatus: LocationVerificationStatus;
   verificationTimestamp: string | null;

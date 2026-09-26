@@ -26,6 +26,13 @@ interface StoredAppointment {
   appointmentDateTime: string;
   serviceSelected: string;
   serviceAddress: string;
+  addressDetails?: {
+    houseBuilding?: string;
+    streetArea?: string;
+    city?: string;
+    state?: string;
+    pinCode?: string;
+  };
   notes?: string;
   locationVerificationStatus: 'verified' | 'pending' | 'failed' | 'unverified';
   verificationTimestamp: string | null;
@@ -103,21 +110,24 @@ app.post('/api/reverse-geocode', async (req: Request, res: Response) => {
 
     const data = await response.json();
     const addr = data.address || {};
-    const formattedRoad = [addr.house_number, addr.road || addr.street || addr.pedestrian]
+    const formattedHouse = addr.house_number || addr.building || addr.house_name || '';
+    const formattedRoad = [formattedHouse, addr.road || addr.street || addr.pedestrian]
       .filter(Boolean)
       .join(' ');
-    const formattedArea = addr.suburb || addr.neighbourhood || addr.city_district || addr.locality;
-    const formattedCity = addr.city || addr.town || addr.village || addr.county;
-    const formattedState = addr.state;
-    const formattedPostcode = addr.postcode;
-    const formattedCountry = addr.country;
+    const formattedArea = addr.suburb || addr.neighbourhood || addr.city_district || addr.locality || addr.subdistrict || '';
+    const formattedCity = addr.city || addr.town || addr.village || addr.county || addr.district || '';
+    const formattedState = addr.state || '';
+    const formattedPostcode = addr.postcode || '';
+    const formattedCountry = addr.country || '';
 
     const parts = [formattedRoad, formattedArea, formattedCity, formattedState, formattedPostcode, formattedCountry].filter(Boolean);
     const readable = parts.length > 0 ? parts.join(', ') : data.display_name;
 
     return res.json({
       displayName: readable || data.display_name,
-      road: formattedRoad,
+      houseNumber: formattedHouse,
+      road: addr.road || addr.street || addr.pedestrian || '',
+      locality: formattedArea,
       suburb: formattedArea,
       city: formattedCity,
       state: formattedState,
@@ -293,6 +303,7 @@ app.post('/api/appointments', (req: Request, res: Response) => {
       appointmentDateTime,
       serviceSelected,
       serviceAddress,
+      addressDetails,
       notes,
       locationVerificationStatus,
       verificationMethod,
@@ -321,6 +332,7 @@ app.post('/api/appointments', (req: Request, res: Response) => {
       appointmentDateTime: String(appointmentDateTime).trim(),
       serviceSelected: String(serviceSelected).trim(),
       serviceAddress: String(serviceAddress).trim(),
+      addressDetails: addressDetails || undefined,
       notes: notes ? String(notes).trim() : undefined,
       locationVerificationStatus: finalVerificationStatus,
       verificationTimestamp: new Date().toISOString(),

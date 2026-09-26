@@ -8,6 +8,13 @@ export interface CreateAppointmentInput {
   appointmentDateTime: string;
   serviceSelected: string;
   serviceAddress: string;
+  addressDetails?: {
+    houseBuilding?: string;
+    streetArea?: string;
+    city?: string;
+    state?: string;
+    pinCode?: string;
+  };
   notes?: string;
   locationVerificationStatus: LocationVerificationStatus;
   verificationMethod: 'gps_matched' | 'manual_verification_requested' | 'unverified';
@@ -74,6 +81,7 @@ export async function createAppointment(input: CreateAppointmentInput): Promise<
     appointmentDateTime: input.appointmentDateTime,
     serviceSelected: input.serviceSelected,
     serviceAddress: input.serviceAddress.trim(),
+    addressDetails: input.addressDetails,
     notes: input.notes?.trim(),
     locationVerificationStatus: isVerified ? 'verified' : 'pending',
     verificationTimestamp: new Date().toISOString(),

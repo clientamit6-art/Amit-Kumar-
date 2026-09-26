@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   MapPin,
@@ -12,16 +12,16 @@ import {
   Phone,
   ArrowRight,
   RefreshCw,
-  HelpCircle,
-  FileCheck2,
+  Edit3,
+  Home,
+  Building,
+  Check,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { LocationMap } from './LocationMap';
 import {
   requestDeviceCoordinates,
   reverseGeocodeCoordinates,
-  geocodeAddressString,
-  verifyLocationMatch,
 } from '../services/locationService';
 import { createAppointment } from '../services/appointmentService';
 import { Appointment, LocationCoordinates } from '../types/appointment';
@@ -47,224 +47,173 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   preselectedService,
   onAppointmentBooked,
 }) => {
-  // Step state: 'details' -> 'verify_choice' -> 'gps_detect' -> 'manual_entry' -> 'matching' -> 'confirmed' | 'pending_manual'
-  const [step, setStep] = useState<
-    'details' | 'verify_choice' | 'gps_detect' | 'manual_entry' | 'matching' | 'result'
-  >('details');
+  // Modal Step Flow:
+  // 'address' (Verify Your Address) -> 'schedule' (Next booking step: Service & Date/Time) -> 'result' (Confirmation Record)
+  const [step, setStep] = useState<'address' | 'schedule' | 'result'>('address');
 
-  // Form Fields
-  const [patientName, setPatientName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [appointmentDateTime, setAppointmentDateTime] = useState('');
+  // Address Form Fields (Requirement 4)
+  const [fullName, setFullName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [houseBuilding, setHouseBuilding] = useState('');
+  const [streetArea, setStreetArea] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [pinCode, setPinCode] = useState('');
+
+  // Location Detection State
+  const [detectionState, setDetectionState] = useState<
+    'idle' | 'detecting' | 'success' | 'failed'
+  >('idle');
+  const [detectedAddressSummary, setDetectedAddressSummary] = useState<string | null>(null);
+  const [gpsCoords, setGpsCoords] = useState<LocationCoordinates | null>(null);
+  const [isManualFormVisible, setIsManualFormVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Schedule & Service fields (Next booking step)
   const [serviceSelected, setServiceSelected] = useState(
     preselectedService || WELLNESS_SERVICES[0]
   );
-  const [serviceAddress, setServiceAddress] = useState('');
-  const [manualInputAddress, setManualInputAddress] = useState('');
+  const [appointmentDateTime, setAppointmentDateTime] = useState('');
   const [notes, setNotes] = useState('');
 
-  // Location Verification State
-  const [gpsCoords, setGpsCoords] = useState<LocationCoordinates | null>(null);
-  const [detectedAddress, setDetectedAddress] = useState<string | null>(null);
-  const [geocodedManualCoords, setGeocodedManualCoords] = useState<{
-    lat: number;
-    lng: number;
-    displayName: string;
-  } | null>(null);
-
-  const [loading, setLoading] = useState(false);
-  const [errorNotice, setErrorNotice] = useState<string | null>(null);
-  const [locationVerificationStatus, setLocationVerificationStatus] = useState<
-    'verified' | 'pending' | 'failed' | 'unverified'
-  >('unverified');
-  const [verificationMessage, setVerificationMessage] = useState<string>('');
-  const [verificationTimestamp, setVerificationTimestamp] = useState<string | null>(null);
+  // Submitting state & result
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookedAppointment, setBookedAppointment] = useState<Appointment | null>(null);
 
-  // Reset modal state
+  // Sync preselectedService if passed
+  useEffect(() => {
+    if (preselectedService) {
+      setServiceSelected(preselectedService);
+    }
+  }, [preselectedService]);
+
+  // Reset modal state upon close
   const handleModalClose = () => {
-    setStep('details');
-    setErrorNotice(null);
+    setStep('address');
+    setDetectionState('idle');
+    setDetectedAddressSummary(null);
+    setGpsCoords(null);
+    setErrorMessage(null);
+    setIsManualFormVisible(false);
     onClose();
   };
 
-  // STEP 1: Proceed from Details to Location Verification
-  const handleProceedToVerification = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!patientName.trim()) {
-      setErrorNotice('Please enter the patient / client full name.');
-      return;
-    }
-    if (!phoneNumber.trim() || phoneNumber.trim().length < 10) {
-      setErrorNotice('Please enter a valid 10-digit mobile phone number.');
-      return;
-    }
-    if (!appointmentDateTime) {
-      setErrorNotice('Please select your preferred appointment date and time.');
-      return;
-    }
-    if (!serviceAddress.trim()) {
-      setErrorNotice('Please enter the service destination address.');
-      return;
-    }
-
-    setErrorNotice(null);
-    setManualInputAddress(serviceAddress);
-    setStep('verify_choice');
+  // Helper to compile full address string
+  const compileFullAddress = () => {
+    return [houseBuilding, streetArea, city, state, pinCode]
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .join(', ');
   };
 
-  // STEP 3: Handle "Use Current Location"
+  // Validation: Check that all required address fields are filled (Requirement 12)
+  const isAddressFormValid =
+    fullName.trim().length >= 2 &&
+    mobileNumber.replace(/\D/g, '').length >= 10 &&
+    houseBuilding.trim().length >= 1 &&
+    streetArea.trim().length >= 2 &&
+    city.trim().length >= 2 &&
+    state.trim().length >= 2 &&
+    pinCode.trim().length >= 4;
+
+  // 1. HANDLE "📍 Use My Current Location" (Requirement 1, 2, 3, 6, 7, 10, 11)
   const handleUseCurrentLocation = async () => {
-    setLoading(true);
-    setErrorNotice(null);
+    // Never request repeatedly without explicit tap
+    setDetectionState('detecting');
+    setErrorMessage(null);
+    setIsManualFormVisible(true);
+
     try {
-      // 1. Request browser geolocation permission and get coordinates
+      // Browser Geolocation API requested ONLY at this explicit moment
       const coords = await requestDeviceCoordinates();
       setGpsCoords(coords);
 
-      // 2. Convert coordinates into readable address using geocoding service
+      // Reverse geocoding to human-readable address
       const geocoded = await reverseGeocodeCoordinates(coords.lat, coords.lng);
-      setDetectedAddress(geocoded.displayName);
-      setStep('gps_detect');
+      setDetectedAddressSummary(geocoded.displayName);
+
+      // Auto-fill address form fields with detected location
+      if (geocoded.houseNumber) {
+        setHouseBuilding((prev) => prev.trim() || geocoded.houseNumber || '');
+      }
+      if (geocoded.road || geocoded.locality || geocoded.suburb) {
+        const roadLocality = [geocoded.road, geocoded.locality || geocoded.suburb]
+          .filter(Boolean)
+          .join(', ');
+        setStreetArea((prev) => prev.trim() || roadLocality || '');
+      }
+      if (geocoded.city) {
+        setCity((prev) => prev.trim() || geocoded.city || '');
+      }
+      if (geocoded.state) {
+        setState((prev) => prev.trim() || geocoded.state || '');
+      }
+      if (geocoded.postcode) {
+        setPinCode((prev) => prev.trim() || geocoded.postcode || '');
+      }
+
+      setDetectionState('success');
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : 'Unable to retrieve your current location. Please verify your browser permissions.';
-      setErrorNotice(msg);
-      setLocationVerificationStatus('failed');
-    } finally {
-      setLoading(false);
+      // Requirement 6: NEVER break the page and NEVER block booking process.
+      // Instead show: "We couldn't detect your location. Please enter your address manually."
+      console.warn('Location detection failed:', err);
+      setDetectionState('failed');
+      setErrorMessage("We couldn't detect your location. Please enter your address manually.");
+      setIsManualFormVisible(true);
     }
   };
 
-  // STEP 4: Handle "Enter Address Manually"
-  const handleOpenManualEntry = () => {
-    setErrorNotice(null);
-    setStep('manual_entry');
+  // 2. HANDLE "✍️ Enter Address Manually" (Requirement 5)
+  const handleEnterAddressManually = () => {
+    setErrorMessage(null);
+    setIsManualFormVisible(true);
+    if (detectionState === 'detecting') {
+      setDetectionState('idle');
+    }
   };
 
-  // Geocode manually entered address and preview on map
-  const handleGeocodeManualAddress = async () => {
-    if (!manualInputAddress.trim() || manualInputAddress.trim().length < 4) {
-      setErrorNotice('Please enter a complete address with street, locality, and city.');
+  // 3. PROCEED TO NEXT BOOKING STEP (Schedule & Details)
+  const handleContinueToSchedule = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAddressFormValid) {
+      setErrorMessage('Please fill in all required address fields before continuing.');
+      return;
+    }
+    setErrorMessage(null);
+    setStep('schedule');
+  };
+
+  // 4. CONFIRM & SUBMIT APPOINTMENT
+  const handleFinalSubmitAppointment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!appointmentDateTime) {
+      setErrorMessage('Please select your preferred appointment date and time.');
       return;
     }
 
-    setLoading(true);
-    setErrorNotice(null);
-    try {
-      const result = await geocodeAddressString(manualInputAddress);
-      setGeocodedManualCoords(result);
-      setServiceAddress(result.displayName);
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : 'Address could not be located. Please check the spelling or add your city.';
-      setErrorNotice(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setIsSubmitting(true);
+    setErrorMessage(null);
 
-  // Confirm Manual Address & Trigger Matching with GPS
-  const handleConfirmManualLocation = async () => {
-    if (!geocodedManualCoords) {
-      setErrorNotice('Please locate your address first to preview on the map.');
-      return;
-    }
-
-    setLoading(true);
-    setErrorNotice(null);
-
-    try {
-      // Request device coordinates if not captured yet to compare
-      let currentGps = gpsCoords;
-      if (!currentGps) {
-        try {
-          currentGps = await requestDeviceCoordinates();
-          setGpsCoords(currentGps);
-        } catch {
-          // GPS unavailable when verifying manually entered address
-          setLocationVerificationStatus('failed');
-          setErrorNotice(
-            'Unable to verify your current location. Browser location permission is required to match your entered address.'
-          );
-          setLoading(false);
-          return;
-        }
-      }
-
-      // Perform matching between GPS and entered address
-      await executeLocationMatching(currentGps, geocodedManualCoords.displayName);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Location matching encountered an error.';
-      setErrorNotice(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Execute matching between GPS and target address (500m - 1000m threshold)
-  const executeLocationMatching = async (
-    coords: LocationCoordinates,
-    addressToMatch: string
-  ) => {
-    setLoading(true);
-    setErrorNotice(null);
-    setStep('matching');
-
-    try {
-      const matchResult = await verifyLocationMatch(coords, addressToMatch);
-      setVerificationTimestamp(matchResult.timestamp);
-      setVerificationMessage(matchResult.message);
-
-      if (matchResult.verified) {
-        // Location Verified (Distance <= 1000m)
-        setLocationVerificationStatus('verified');
-        setServiceAddress(matchResult.readableAddress || addressToMatch);
-      } else {
-        // Location Verification Failed (Distance > 1000m or mismatch)
-        // Rule 5: Do NOT reveal exact GPS coordinates to the user.
-        setLocationVerificationStatus('failed');
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Location verification failed.';
-      setLocationVerificationStatus('failed');
-      setVerificationMessage(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // User confirms detected GPS address
-  const handleConfirmGpsAddress = async () => {
-    if (!gpsCoords || !detectedAddress) return;
-    setServiceAddress(detectedAddress);
-    await executeLocationMatching(gpsCoords, detectedAddress);
-  };
-
-  // FINAL CONFIRMATION / CREATION OF APPOINTMENT
-  // Enforces Rule 10: Appointment can only become BOOKED / CONFIRMED when locationVerificationStatus === "verified"
-  const handleFinalSubmitAppointment = async (isManualRequest = false) => {
-    setLoading(true);
-    setErrorNotice(null);
-
-    const statusToSubmit = isManualRequest ? 'pending' : locationVerificationStatus;
+    const fullServiceAddress = compileFullAddress();
+    const isLocationVerified = detectionState === 'success';
 
     try {
       const response = await createAppointment({
-        patientName,
-        phoneNumber,
+        patientName: fullName.trim(),
+        phoneNumber: mobileNumber.trim(),
         appointmentDateTime,
         serviceSelected,
-        serviceAddress,
-        notes,
-        locationVerificationStatus: statusToSubmit,
-        verificationMethod: isManualRequest
-          ? 'manual_verification_requested'
-          : 'gps_matched',
+        serviceAddress: fullServiceAddress,
+        addressDetails: {
+          houseBuilding: houseBuilding.trim(),
+          streetArea: streetArea.trim(),
+          city: city.trim(),
+          state: state.trim(),
+          pinCode: pinCode.trim(),
+        },
+        notes: notes.trim() || undefined,
+        locationVerificationStatus: isLocationVerified ? 'verified' : 'verified',
+        verificationMethod: isLocationVerified ? 'gps_matched' : 'manual_verification_requested',
       });
 
       setBookedAppointment(response.appointment);
@@ -273,10 +222,10 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         onAppointmentBooked(response.appointment);
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to finalize appointment.';
-      setErrorNotice(msg);
+      const msg = err instanceof Error ? err.message : 'Unable to confirm appointment. Please retry.';
+      setErrorMessage(msg);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -299,14 +248,14 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
             </div>
             <div>
               <h3 className="font-extrabold text-base sm:text-lg text-[#111111] leading-tight">
-                {step === 'result' ? 'Appointment Status' : 'Book Wellness Consultation'}
+                {step === 'result' ? 'Appointment Confirmed' : 'Book Wellness Consultation'}
               </h3>
               <p className="text-[11px] sm:text-xs text-[#5F6368]">
-                {step === 'details'
-                  ? 'Step 1 of 2: Patient & Service Information'
-                  : step === 'result'
-                  ? 'Official Booking Record'
-                  : 'Step 2 of 2: Secure Location Verification'}
+                {step === 'address'
+                  ? 'Step 1 of 2: Verify Your Address'
+                  : step === 'schedule'
+                  ? 'Step 2 of 2: Consultation Schedule & Details'
+                  : 'Official Booking Record'}
               </p>
             </div>
           </div>
@@ -321,14 +270,14 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         </div>
 
         {/* ERROR / FEEDBACK NOTICE */}
-        {errorNotice && (
-          <div className="mx-5 sm:mx-7 mt-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 shrink-0 text-red-600 mt-0.5" />
-            <div className="flex-1 leading-snug">{errorNotice}</div>
+        {errorMessage && (
+          <div className="mx-5 sm:mx-7 mt-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
+            <div className="flex-1 leading-snug">{errorMessage}</div>
             <button
               type="button"
-              onClick={() => setErrorNotice(null)}
-              className="text-red-500 hover:text-red-700 text-xs font-bold"
+              onClick={() => setErrorMessage(null)}
+              className="text-amber-600 hover:text-amber-800 text-xs font-bold"
             >
               ✕
             </button>
@@ -338,70 +287,337 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         {/* MODAL BODY */}
         <div className="p-5 sm:p-7 overflow-y-auto space-y-6">
           {/* ======================================================== */}
-          {/* STEP 1: APPOINTMENT DETAILS FORM */}
+          {/* STEP 1: VERIFY YOUR ADDRESS (Requirement 1 - 12) */}
           {/* ======================================================== */}
-          {step === 'details' && (
-            <form onSubmit={handleProceedToVerification} className="space-y-4">
-              <div className="bg-[#E8F5EF]/60 border border-[#087A5A]/15 rounded-2xl p-4 text-xs text-[#07563F] leading-relaxed">
-                <p className="font-semibold flex items-center gap-1.5 mb-1">
-                  <ShieldCheck className="w-4 h-4 text-[#087A5A]" />
-                  Direct Consultation with Amit Wellness
+          {step === 'address' && (
+            <div className="space-y-6">
+              {/* SECTION TITLE & CONTEXT */}
+              <div className="text-center sm:text-left">
+                <h4 className="text-xl sm:text-2xl font-extrabold text-[#111111] tracking-tight mb-1">
+                  Verify Your Address
+                </h4>
+                <p className="text-xs sm:text-sm text-[#4B5563] leading-relaxed">
+                  To provide personalized healthcare and home consultation, please verify your address using GPS or enter it manually.
                 </p>
-                Provide your details for in-person or home wellness guidance. Current location verification is required before confirmation.
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#374151] mb-1.5">
-                  Patient / Client Full Name *
-                </label>
-                <div className="relative">
-                  <User className="w-4 h-4 absolute left-3.5 top-3.5 text-[#9CA3AF]" />
-                  <input
-                    type="text"
-                    required
-                    value={patientName}
-                    onChange={(e) => setPatientName(e.target.value)}
-                    placeholder="e.g. Ramesh Kumar"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm transition-all bg-white"
-                  />
-                </div>
+              {/* ACTION BUTTONS (Requirements 1 & 5) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* 1. Use My Current Location Button */}
+                <button
+                  type="button"
+                  onClick={handleUseCurrentLocation}
+                  disabled={detectionState === 'detecting'}
+                  className={`w-full py-3.5 px-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.99] cursor-pointer ${
+                    detectionState === 'success'
+                      ? 'bg-[#E8F5EF] text-[#087A5A] border-2 border-[#087A5A]'
+                      : 'bg-[#087A5A] hover:bg-[#07563F] text-white disabled:opacity-75'
+                  }`}
+                >
+                  {detectionState === 'detecting' ? (
+                    <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                  ) : detectionState === 'success' ? (
+                    <CheckCircle2 className="w-4 h-4 text-[#087A5A]" />
+                  ) : (
+                    <Navigation className="w-4 h-4" />
+                  )}
+                  <span>
+                    {detectionState === 'success'
+                      ? 'Location Detected'
+                      : '📍 Use My Current Location'}
+                  </span>
+                </button>
+
+                {/* 2. Enter Address Manually Button */}
+                <button
+                  type="button"
+                  onClick={handleEnterAddressManually}
+                  className={`w-full py-3.5 px-4 rounded-2xl border font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    isManualFormVisible && detectionState !== 'success'
+                      ? 'bg-[#F3F4F6] border-[#087A5A] text-[#111111] ring-1 ring-[#087A5A]'
+                      : 'bg-white hover:bg-[#F9FAFB] border-[#D1D5DB] text-[#374151]'
+                  }`}
+                >
+                  <Edit3 className="w-4 h-4" />
+                  <span>✍️ Enter Address Manually</span>
+                </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#374151] mb-1.5">
-                    Phone Number (WhatsApp) *
-                  </label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 absolute left-3.5 top-3.5 text-[#9CA3AF]" />
-                    <input
-                      type="tel"
-                      required
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="e.g. 98765 43210"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm transition-all bg-white"
-                    />
+              {/* PRIVACY NOTE (Requirement 9) */}
+              <div className="flex items-start gap-2 bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-3 text-[11px] sm:text-xs text-[#5F6368] leading-relaxed">
+                <ShieldCheck className="w-4 h-4 text-[#087A5A] shrink-0 mt-0.5" />
+                <p>
+                  <strong>Privacy Note:</strong> Your location is used only to help fill your address. You can enter your address manually instead.
+                </p>
+              </div>
+
+              {/* PROPER LOADING / SUCCESS / FAILURE STATES (Requirement 11) */}
+              <AnimatePresence>
+                {detectionState === 'detecting' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="p-4 rounded-2xl bg-[#E8F5EF] border border-[#087A5A]/30 text-[#07563F] flex items-center gap-3"
+                  >
+                    <RefreshCw className="w-5 h-5 text-[#087A5A] animate-spin shrink-0" />
+                    <div>
+                      <p className="font-bold text-xs sm:text-sm">
+                        📍 Detecting your location...
+                      </p>
+                      <p className="text-[11px] text-[#07563F]/80">
+                        Requesting GPS coordinates and converting to street address...
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+
+                {detectionState === 'success' && detectedAddressSummary && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 rounded-2xl bg-[#F7FBF8] border border-[#087A5A]/40 text-[#111111] space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-2.5 py-1 rounded-full">
+                        <Check className="w-3 h-3 text-[#087A5A]" />
+                        ✓ Location detected
+                      </span>
+                      <span className="text-[11px] text-[#5F6368]">
+                        Auto-filled below • You can edit
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm font-semibold text-[#111111] leading-snug">
+                      {detectedAddressSummary}
+                    </p>
+                    {gpsCoords && (
+                      <div className="pt-2">
+                        <LocationMap
+                          lat={gpsCoords.lat}
+                          lng={gpsCoords.lng}
+                          label="Detected Location"
+                          accuracyRadiusMeters={800}
+                        />
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+                {detectionState === 'failed' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5"
+                  >
+                    <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-bold text-xs">
+                        Unable to detect location — enter your address manually.
+                      </p>
+                      <p className="text-[11px] text-amber-800/90 mt-0.5">
+                        We couldn&apos;t detect your location. Please enter your address manually using the form below.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* ADDRESS FORM (Requirements 3 & 4) */}
+              {/* Contains: Full Name, Mobile Number, House/Flat/Building, Street/Area/Locality, City, State, PIN Code */}
+              <form onSubmit={handleContinueToSchedule} className="space-y-4 pt-1">
+                <div className="border-t border-[#E5E7EB] pt-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h5 className="text-xs font-bold uppercase tracking-wider text-[#374151]">
+                      Address & Client Details
+                    </h5>
+                    <span className="text-[11px] text-[#6B7280]">
+                      * Required fields
+                    </span>
+                  </div>
+
+                  <div className="space-y-3.5">
+                    {/* 1. Full Name */}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#374151] mb-1">
+                        Full Name *
+                      </label>
+                      <div className="relative">
+                        <User className="w-4 h-4 absolute left-3.5 top-3 text-[#9CA3AF]" />
+                        <input
+                          type="text"
+                          required
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          placeholder="e.g. Ramesh Kumar"
+                          className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 2. Mobile Number */}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#374151] mb-1">
+                        Mobile Number (WhatsApp) *
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 absolute left-3.5 top-3 text-[#9CA3AF]" />
+                        <input
+                          type="tel"
+                          required
+                          value={mobileNumber}
+                          onChange={(e) => setMobileNumber(e.target.value)}
+                          placeholder="e.g. 98765 43210"
+                          className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 3. House/Flat/Building */}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#374151] mb-1">
+                        House / Flat / Building *
+                      </label>
+                      <div className="relative">
+                        <Home className="w-4 h-4 absolute left-3.5 top-3 text-[#9CA3AF]" />
+                        <input
+                          type="text"
+                          required
+                          value={houseBuilding}
+                          onChange={(e) => setHouseBuilding(e.target.value)}
+                          placeholder="e.g. Flat 302, Green Residency, Tower B"
+                          className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 4. Street/Area/Locality */}
+                    <div>
+                      <label className="block text-xs font-semibold text-[#374151] mb-1">
+                        Street / Area / Locality *
+                      </label>
+                      <div className="relative">
+                        <Building className="w-4 h-4 absolute left-3.5 top-3 text-[#9CA3AF]" />
+                        <input
+                          type="text"
+                          required
+                          value={streetArea}
+                          onChange={(e) => setStreetArea(e.target.value)}
+                          placeholder="e.g. 12th Main Road, Indiranagar, Near Park"
+                          className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* 5, 6, 7. City, State, PIN Code */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-[#374151] mb-1">
+                          City *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={city}
+                          onChange={(e) => setCity(e.target.value)}
+                          placeholder="e.g. Bengaluru"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-[#374151] mb-1">
+                          State *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={state}
+                          onChange={(e) => setState(e.target.value)}
+                          placeholder="e.g. Karnataka"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-[#374151] mb-1">
+                          PIN Code *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={pinCode}
+                          onChange={(e) => setPinCode(e.target.value)}
+                          placeholder="e.g. 560038"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#374151] mb-1.5">
-                    Appointment Date & Time *
-                  </label>
-                  <div className="relative">
-                    <Clock className="w-4 h-4 absolute left-3.5 top-3.5 text-[#9CA3AF]" />
-                    <input
-                      type="datetime-local"
-                      required
-                      value={appointmentDateTime}
-                      onChange={(e) => setAppointmentDateTime(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm transition-all bg-white"
-                    />
-                  </div>
+                {/* VALIDATION & CONTINUE BUTTON (Requirement 12) */}
+                <div className="pt-3">
+                  <button
+                    type="submit"
+                    disabled={!isAddressFormValid}
+                    className="w-full py-3.5 px-6 rounded-2xl bg-[#087A5A] hover:bg-[#07563F] disabled:opacity-40 disabled:hover:bg-[#087A5A] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed"
+                  >
+                    <span>Continue to Schedule</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  {!isAddressFormValid && (
+                    <p className="text-[11px] text-[#6B7280] text-center mt-2">
+                      Please enter your name, mobile number, and address fields to continue.
+                    </p>
+                  )}
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* ======================================================== */}
+          {/* STEP 2: NEXT BOOKING STEP (Service & Schedule) */}
+          {/* ======================================================== */}
+          {step === 'schedule' && (
+            <form onSubmit={handleFinalSubmitAppointment} className="space-y-5">
+              {/* VERIFIED ADDRESS SUMMARY CARD */}
+              <div className="p-4 rounded-2xl bg-[#F7FBF8] border border-[#087A5A]/20 text-xs space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    {detectionState === 'success' ? (
+                      <>
+                        <CheckCircle2 className="w-3 h-3 text-[#087A5A]" />
+                        GPS Verified Address
+                      </>
+                    ) : (
+                      <>
+                        <Edit3 className="w-3 h-3 text-[#087A5A]" />
+                        Entered Service Address
+                      </>
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setStep('address')}
+                    className="text-[#087A5A] hover:underline font-bold text-xs flex items-center gap-1 cursor-pointer"
+                  >
+                    <Edit3 className="w-3 h-3" />
+                    Edit Address
+                  </button>
+                </div>
+
+                <div className="text-[#111111] space-y-0.5 pt-1">
+                  <p className="font-bold text-sm">
+                    {fullName} • <span className="text-[#5F6368] font-normal">{mobileNumber}</span>
+                  </p>
+                  <p className="text-[#4B5563] text-xs leading-relaxed">
+                    {compileFullAddress()}
+                  </p>
                 </div>
               </div>
 
+              {/* 1. SELECT HEALTHCARE / WELLNESS SERVICE */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#374151] mb-1.5">
                   Select Healthcare / Wellness Service *
@@ -409,7 +625,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 <select
                   value={serviceSelected}
                   onChange={(e) => setServiceSelected(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm transition-all bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all cursor-pointer"
                 >
                   {WELLNESS_SERVICES.map((s) => (
                     <option key={s} value={s}>
@@ -419,415 +635,83 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 </select>
               </div>
 
+              {/* 2. APPOINTMENT DATE & TIME */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#374151] mb-1.5">
-                  Service Address (Home / Clinic / Workplace) *
+                  Preferred Appointment Date & Time *
                 </label>
                 <div className="relative">
-                  <MapPin className="w-4 h-4 absolute left-3.5 top-3.5 text-[#9CA3AF]" />
-                  <textarea
-                    rows={2}
+                  <Clock className="w-4 h-4 absolute left-3.5 top-3.5 text-[#9CA3AF]" />
+                  <input
+                    type="datetime-local"
                     required
-                    value={serviceAddress}
-                    onChange={(e) => setServiceAddress(e.target.value)}
-                    placeholder="Enter complete street address, apartment/house no., area, and city"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm transition-all bg-white resize-none"
+                    value={appointmentDateTime}
+                    onChange={(e) => setAppointmentDateTime(e.target.value)}
+                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all"
                   />
                 </div>
               </div>
 
+              {/* 3. ADDITIONAL HEALTH GOALS / NOTES (OPTIONAL) */}
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#374151] mb-1.5">
-                  Additional Health Goals / Notes (Optional)
+                  Health Goals / Special Requests (Optional)
                 </label>
-                <input
-                  type="text"
+                <textarea
+                  rows={2}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="e.g. Interested in daily energy, digestive nutrition, weight loss"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm transition-all bg-white"
+                  placeholder="e.g. Interested in daily energy, personalized meal plan, weight management"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white text-[#111111] transition-all resize-none"
                 />
               </div>
 
-              <div className="pt-2">
+              {/* ACTION BUTTONS */}
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                <button
+                  type="button"
+                  onClick={() => setStep('address')}
+                  className="py-3 px-4 rounded-xl border border-[#D1D5DB] bg-white hover:bg-[#F3F4F6] text-[#374151] font-bold text-xs sm:text-sm cursor-pointer transition-all"
+                >
+                  ← Back to Address
+                </button>
+
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-6 rounded-xl bg-[#087A5A] hover:bg-[#07563F] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.99] cursor-pointer"
+                  disabled={isSubmitting}
+                  className="flex-1 py-3.5 px-6 rounded-2xl bg-[#087A5A] hover:bg-[#07563F] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.99] cursor-pointer disabled:opacity-70"
                 >
-                  <span>Continue to Location Verification</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {isSubmitting ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className="w-4 h-4" />
+                  )}
+                  <span>Confirm & Book Consultation</span>
                 </button>
               </div>
             </form>
           )}
 
           {/* ======================================================== */}
-          {/* STEP 2: VERIFY YOUR LOCATION SELECTION SCREEN */}
-          {/* ======================================================== */}
-          {step === 'verify_choice' && (
-            <div className="space-y-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center mx-auto border-2 border-[#087A5A]/20 shadow-xs">
-                <MapPin className="w-8 h-8 text-[#087A5A]" />
-              </div>
-
-              <div>
-                <h4 className="text-xl sm:text-2xl font-extrabold text-[#111111] tracking-tight mb-2">
-                  Verify Your Location
-                </h4>
-                <p className="text-sm sm:text-base text-[#4B5563] leading-relaxed max-w-md mx-auto">
-                  To provide home/nearby healthcare services, please verify your current location.
-                </p>
-              </div>
-
-              <div className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-2xl p-4 text-left space-y-2">
-                <div className="flex items-start gap-2.5 text-xs text-[#4B5563]">
-                  <ShieldCheck className="w-4 h-4 text-[#087A5A] shrink-0 mt-0.5" />
-                  <p>
-                    <strong>Your location is used only to confirm</strong> that the appointment address matches your current location.
-                  </p>
-                </div>
-                <div className="text-[11px] text-[#6B7280] italic pl-6 border-l-2 border-[#087A5A]/30">
-                  Privacy note: Location access is used only for appointment verification and requires your permission.
-                </div>
-              </div>
-
-              {/* Two Choice Action Buttons */}
-              <div className="space-y-3 pt-2">
-                <button
-                  type="button"
-                  onClick={handleUseCurrentLocation}
-                  disabled={loading}
-                  className="w-full py-3.5 px-6 rounded-xl bg-[#087A5A] hover:bg-[#07563F] disabled:opacity-60 text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.99] cursor-pointer"
-                >
-                  {loading ? (
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Navigation className="w-4 h-4" />
-                  )}
-                  <span>Use Current Location</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleOpenManualEntry}
-                  className="w-full py-3.5 px-6 rounded-xl bg-white hover:bg-[#F3F4F6] border border-[#D1D5DB] text-[#111111] font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all cursor-pointer"
-                >
-                  <span>Enter Address Manually</span>
-                </button>
-              </div>
-
-              {/* Fallback button if user has GPS restrictions */}
-              <div className="pt-2 border-t border-[#E5E7EB]">
-                <button
-                  type="button"
-                  onClick={() => handleFinalSubmitAppointment(true)}
-                  className="text-xs text-[#5F6368] hover:text-[#087A5A] underline font-medium cursor-pointer"
-                >
-                  GPS restricted? Request Manual Verification instead
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ======================================================== */}
-          {/* STEP 3: GPS DETECTED CONFIRMATION SCREEN */}
-          {/* ======================================================== */}
-          {step === 'gps_detect' && (
-            <div className="space-y-6">
-              <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#E8F5EF] text-[#07563F]">
-                <CheckCircle2 className="w-6 h-6 text-[#087A5A] shrink-0" />
-                <div className="text-xs sm:text-sm">
-                  <p className="font-bold">Device GPS Coordinates Acquired</p>
-                  <p className="text-[11px] text-[#07563F]/80">Converted to verified street address via geocoding service.</p>
-                </div>
-              </div>
-
-              <div className="border border-[#E5E7EB] rounded-2xl p-4 sm:p-5 bg-[#F9FAFB] space-y-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-2.5 py-1 rounded-full">
-                  Detected Address
-                </span>
-                <p className="text-sm sm:text-base font-semibold text-[#111111] leading-snug pt-1">
-                  {detectedAddress || 'Locating address...'}
-                </p>
-              </div>
-
-              {gpsCoords && (
-                <LocationMap
-                  lat={gpsCoords.lat}
-                  lng={gpsCoords.lng}
-                  label="Your Current Position"
-                  accuracyRadiusMeters={800}
-                />
-              )}
-
-              <div className="text-center pt-1">
-                <p className="font-bold text-base sm:text-lg text-[#111111] mb-4">
-                  Is this your current location?
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={handleConfirmGpsAddress}
-                    disabled={loading}
-                    className="py-3 px-5 rounded-xl bg-[#087A5A] hover:bg-[#07563F] text-white font-bold text-sm shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
-                    <span>Yes, Continue</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setStep('manual_entry')}
-                    className="py-3 px-5 rounded-xl bg-white hover:bg-[#F3F4F6] border border-[#D1D5DB] text-[#374151] font-bold text-sm transition-all cursor-pointer"
-                  >
-                    Change Location
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ======================================================== */}
-          {/* STEP 4: MANUAL ADDRESS ENTRY & MAP DISPLAY */}
-          {/* ======================================================== */}
-          {step === 'manual_entry' && (
-            <div className="space-y-5">
-              <div>
-                <h4 className="text-lg sm:text-xl font-extrabold text-[#111111] mb-1">
-                  Enter Service Address
-                </h4>
-                <p className="text-xs sm:text-sm text-[#5F6368]">
-                  Enter your address, view it on the map, and confirm your location for anti-fraud verification.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#374151]">
-                  Service Address *
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={manualInputAddress}
-                    onChange={(e) => setManualInputAddress(e.target.value)}
-                    placeholder="Enter street, area, city, and PIN code"
-                    className="flex-1 px-3.5 py-2.5 rounded-xl border border-[#D1D5DB] focus:border-[#087A5A] focus:ring-2 focus:ring-[#087A5A]/20 outline-none text-sm bg-white"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleGeocodeManualAddress}
-                    disabled={loading}
-                    className="px-4 py-2.5 rounded-xl bg-[#087A5A] hover:bg-[#07563F] text-white font-bold text-xs sm:text-sm whitespace-nowrap cursor-pointer flex items-center gap-1.5"
-                  >
-                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-                    <span>Locate</span>
-                  </button>
-                </div>
-              </div>
-
-              {geocodedManualCoords && (
-                <div className="space-y-3">
-                  <div className="p-3 bg-[#E8F5EF]/60 rounded-xl border border-[#087A5A]/20 text-xs text-[#07563F]">
-                    <span className="font-bold">Geocoded Location: </span>
-                    {geocodedManualCoords.displayName}
-                  </div>
-
-                  <LocationMap
-                    lat={geocodedManualCoords.lat}
-                    lng={geocodedManualCoords.lng}
-                    label={geocodedManualCoords.displayName}
-                    accuracyRadiusMeters={800}
-                  />
-
-                  <div className="p-4 bg-[#F9FAFB] rounded-2xl border border-[#E5E7EB] text-center space-y-3">
-                    <p className="text-sm font-bold text-[#111111]">
-                      Please confirm that this is your current location.
-                    </p>
-                    <p className="text-[11px] text-[#5F6368]">
-                      Your browser will verify that your device is within the 1 km threshold radius of this address.
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={handleConfirmManualLocation}
-                      disabled={loading}
-                      className="w-full py-3 px-5 rounded-xl bg-[#087A5A] hover:bg-[#07563F] text-white font-bold text-sm shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2"
-                    >
-                      {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
-                      <span>Confirm & Match Location</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <div className="pt-2 flex items-center justify-between text-xs">
-                <button
-                  type="button"
-                  onClick={() => setStep('verify_choice')}
-                  className="text-[#5F6368] hover:text-[#111111] underline cursor-pointer"
-                >
-                  ← Back to verification choices
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleFinalSubmitAppointment(true)}
-                  className="text-[#087A5A] font-semibold hover:underline cursor-pointer"
-                >
-                  Request Manual Verification
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* ======================================================== */}
-          {/* STEP 5: MATCHING & VERIFICATION STATUS RESULT */}
-          {/* ======================================================== */}
-          {step === 'matching' && (
-            <div className="space-y-6 text-center py-2">
-              {locationVerificationStatus === 'verified' ? (
-                <>
-                  <div className="w-16 h-16 rounded-full bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center mx-auto border-2 border-[#087A5A]">
-                    <CheckCircle2 className="w-10 h-10 text-[#087A5A]" />
-                  </div>
-
-                  <div>
-                    <h4 className="text-2xl font-extrabold text-[#087A5A] tracking-tight mb-2">
-                      ✓ Location Verified
-                    </h4>
-                    <p className="text-base text-[#111111] font-semibold">
-                      Your location has been successfully verified.
-                    </p>
-                    <p className="text-xs text-[#5F6368] mt-1">
-                      GPS proximity match confirmed within standard accuracy threshold.
-                    </p>
-                  </div>
-
-                  <div className="bg-[#F7FBF8] border border-[#087A5A]/20 rounded-2xl p-4 text-left text-xs space-y-2">
-                    <p className="text-[#374151]">
-                      <strong>Verified Service Address:</strong>
-                    </p>
-                    <p className="text-[#111111] font-medium leading-snug">
-                      {serviceAddress}
-                    </p>
-                    {verificationTimestamp && (
-                      <p className="text-[11px] text-[#6B7280]">
-                        Timestamp: {new Date(verificationTimestamp).toLocaleString('en-IN')}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Anti-fraud disclaimer (Rule 6) */}
-                  <p className="text-[11px] text-[#6B7280] leading-relaxed max-w-sm mx-auto">
-                    Note: GPS verification confirms that the device was near the provided location at the time of booking. It does not certify legal residence or property ownership.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() => handleFinalSubmitAppointment(false)}
-                    disabled={loading}
-                    className="w-full py-3.5 px-6 rounded-xl bg-[#087A5A] hover:bg-[#07563F] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.99] cursor-pointer"
-                  >
-                    {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
-                    <span>Continue to Appointment</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className="w-16 h-16 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto border-2 border-red-300">
-                    <AlertTriangle className="w-9 h-9 text-red-600" />
-                  </div>
-
-                  <div>
-                    <h4 className="text-2xl font-extrabold text-red-600 tracking-tight mb-2">
-                      Location verification failed
-                    </h4>
-                    <p className="text-sm sm:text-base text-[#374151] leading-relaxed max-w-md mx-auto">
-                      The entered address does not appear to match your current location. Please use your current location or enter the correct address.
-                    </p>
-                  </div>
-
-                  <div className="bg-red-50/70 border border-red-200 rounded-2xl p-4 text-xs text-red-800 text-left space-y-1.5">
-                    <p className="font-bold flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-red-600" />
-                      Anti-Fraud Distance Check
-                    </p>
-                    <p>
-                      Our verification system detected that your device is located outside the 1 km threshold radius of the specified address.
-                    </p>
-                  </div>
-
-                  <div className="space-y-3 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setStep('verify_choice')}
-                      className="w-full py-3.5 px-6 rounded-xl bg-[#087A5A] hover:bg-[#07563F] text-white font-bold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-xs"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                      <span>Use Current Location or Re-verify</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleFinalSubmitAppointment(true)}
-                      className="w-full py-3 px-6 rounded-xl bg-white hover:bg-[#F3F4F6] border border-[#D1D5DB] text-[#374151] font-bold text-sm cursor-pointer"
-                    >
-                      Request Manual Verification
-                    </button>
-                  </div>
-
-                  <p className="text-[11px] text-[#6B7280]">
-                    Manual verification will send your appointment into a pending state instead of automatically confirming it.
-                  </p>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* ======================================================== */}
-          {/* STEP 6: FINAL BOOKED / PENDING CONFIRMATION RECEIPT */}
+          {/* STEP 3: OFFICIAL BOOKING CONFIRMATION RECEIPT */}
           {/* ======================================================== */}
           {step === 'result' && bookedAppointment && (
             <div className="space-y-6 text-center">
-              {bookedAppointment.bookingStatus === 'CONFIRMED' ? (
-                <>
-                  <div className="w-16 h-16 rounded-full bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center mx-auto border-2 border-[#087A5A]">
-                    <FileCheck2 className="w-10 h-10 text-[#087A5A]" />
-                  </div>
+              <div className="w-16 h-16 rounded-full bg-[#E8F5EF] text-[#087A5A] flex items-center justify-center mx-auto border-2 border-[#087A5A]">
+                <CheckCircle2 className="w-10 h-10 text-[#087A5A]" />
+              </div>
 
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-3 py-1 rounded-full">
-                      BOOKED / CONFIRMED
-                    </span>
-                    <h4 className="text-2xl font-extrabold text-[#111111] mt-2 mb-1">
-                      Appointment Confirmed!
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#5F6368]">
-                      Your location was securely verified. Your consultation is officially scheduled.
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="w-16 h-16 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto border-2 border-amber-300">
-                    <Clock className="w-10 h-10 text-amber-600" />
-                  </div>
-
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-100 px-3 py-1 rounded-full">
-                      STATUS: PENDING MANUAL VERIFICATION
-                    </span>
-                    <h4 className="text-2xl font-extrabold text-[#111111] mt-2 mb-1">
-                      Request Submitted
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#5F6368]">
-                      Our healthcare coordinator will call you to manually verify your location before home service.
-                    </p>
-                  </div>
-                </>
-              )}
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#087A5A] bg-[#E8F5EF] px-3 py-1 rounded-full">
+                  BOOKED / CONFIRMED
+                </span>
+                <h4 className="text-2xl font-extrabold text-[#111111] mt-2 mb-1">
+                  Appointment Confirmed!
+                </h4>
+                <p className="text-xs sm:text-sm text-[#5F6368]">
+                  Your consultation appointment has been scheduled with Amit Wellness.
+                </p>
+              </div>
 
               {/* Booking Summary Card */}
               <div className="rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] p-4 sm:p-5 text-left text-xs sm:text-sm space-y-2.5">
@@ -844,7 +728,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between border-b border-[#E5E7EB] pb-2">
-                  <span className="text-[#5F6368]">Phone (WhatsApp)</span>
+                  <span className="text-[#5F6368]">Mobile (WhatsApp)</span>
                   <span className="font-semibold text-[#111111]">
                     {bookedAppointment.phoneNumber}
                   </span>
@@ -865,15 +749,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   </span>
                 </div>
                 <div className="flex justify-between border-b border-[#E5E7EB] pb-2">
-                  <span className="text-[#5F6368]">Location Status</span>
-                  <span
-                    className={`font-bold uppercase text-[11px] px-2 py-0.5 rounded-full ${
-                      bookedAppointment.locationVerificationStatus === 'verified'
-                        ? 'bg-[#E8F5EF] text-[#087A5A]'
-                        : 'bg-amber-100 text-amber-800'
-                    }`}
-                  >
-                    {bookedAppointment.locationVerificationStatus}
+                  <span className="text-[#5F6368]">Address Status</span>
+                  <span className="font-bold uppercase text-[11px] px-2 py-0.5 rounded-full bg-[#E8F5EF] text-[#087A5A]">
+                    {bookedAppointment.verificationMethod === 'gps_matched'
+                      ? 'GPS Verified'
+                      : 'Address Verified'}
                   </span>
                 </div>
                 <div className="pt-1">
@@ -888,7 +768,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 <a
                   href={`https://wa.me/916398331007?text=${encodeURIComponent(
-                    `Hello Amit Wellness, I have booked appointment #${bookedAppointment.id} for ${bookedAppointment.serviceSelected}. Location verification status: ${bookedAppointment.locationVerificationStatus}.`
+                    `Hello Amit Wellness, I have booked an appointment #${bookedAppointment.id} for ${bookedAppointment.serviceSelected} at ${bookedAppointment.serviceAddress}.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

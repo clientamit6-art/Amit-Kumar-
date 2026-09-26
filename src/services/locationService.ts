@@ -89,18 +89,21 @@ export async function reverseGeocodeCoordinates(lat: number, lng: number): Promi
 
   const data = await fallbackRes.json();
   const addr = data.address || {};
-  const formattedRoad = [addr.house_number, addr.road || addr.street].filter(Boolean).join(' ');
-  const formattedArea = addr.suburb || addr.neighbourhood || addr.city_district;
-  const formattedCity = addr.city || addr.town || addr.village;
-  const formattedState = addr.state;
-  const formattedPostcode = addr.postcode;
-  const formattedCountry = addr.country;
+  const formattedHouse = addr.house_number || addr.building || addr.house_name || '';
+  const formattedRoad = [formattedHouse, addr.road || addr.street || addr.pedestrian].filter(Boolean).join(' ');
+  const formattedArea = addr.suburb || addr.neighbourhood || addr.city_district || addr.locality || addr.subdistrict || '';
+  const formattedCity = addr.city || addr.town || addr.village || addr.county || addr.district || '';
+  const formattedState = addr.state || '';
+  const formattedPostcode = addr.postcode || '';
+  const formattedCountry = addr.country || '';
 
   const parts = [formattedRoad, formattedArea, formattedCity, formattedState, formattedPostcode, formattedCountry].filter(Boolean);
 
   return {
     displayName: parts.length > 0 ? parts.join(', ') : data.display_name,
-    road: formattedRoad,
+    houseNumber: formattedHouse,
+    road: addr.road || addr.street || addr.pedestrian || '',
+    locality: formattedArea,
     suburb: formattedArea,
     city: formattedCity,
     state: formattedState,
